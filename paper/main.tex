@@ -1,0 +1,466 @@
+%% AI4Science 2026 -- conference paper (ACM sigconf)
+%% Build:  latexmk -pdf main.tex
+%%
+%% MODEL IDENTITY: the foundation model evaluated here is TEMPO (Melady/TEMPO,
+%% checkpoint TEMPO-80M_v1.pth), loaded by models/tempo_carbon_flux.py and
+%% scripts/fine_tune_tempo.py. It is NOT MOMENT. Use "TEMPO" everywhere.
+%%
+%% Every numeric value in this paper is taken verbatim (or directly derived)
+%% from a file in the repository; the source file is noted in a comment beside
+%% each table/claim. No numbers were invented.
+%%
+%% DOUBLE-BLIND: if the AI4Science CFP mandates double-anonymous review, switch
+%% \documentclass to [sigconf,anonymous]{acmart} and comment out the author
+%% block below before submission. Add author details back only on acceptance.
+
+\documentclass[sigconf]{acmart}
+
+% --- conference metadata (placeholder until the CFP specifics are confirmed) ---
+\settopmatter{printacmref=false}        % drop the ACM reference block for a draft
+\setcopyright{none}
+\acmConference[AI4Science 2026]{Workshop on AI for Science}{2026}{}
+\acmYear{2026}
+\acmISBN{}
+\acmDOI{}
+\renewcommand\footnotetextcopyrightpermission[1]{} % suppress copyright footer in draft
+
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{multirow}
+
+\begin{document}
+
+\title{The Inverted Transfer Penalty: Time-Series Foundation Models
+Defy Cross-Ecosystem Transfer Decay in Carbon-Flux Forecasting}
+
+%% ---- AUTHOR BLOCK (remove / anonymise for double-blind submission) ----
+\author{Paul Ezennolim}
+\affiliation{%
+  \institution{School of Computer Science, University of Sheffield}
+  \city{Sheffield}
+  \country{United Kingdom}}
+\email{paulezennolim@icloud.com}
+
+\author{Po Yang}
+\affiliation{%
+  \institution{School of Computer Science, University of Sheffield}
+  \city{Sheffield}
+  \country{United Kingdom}}
+%% -----------------------------------------------------------------------
+
+\renewcommand{\shortauthors}{Ezennolim and Yang}
+
+\begin{abstract}
+Forecasting net ecosystem exchange (NEE) of carbon dioxide underpins
+climate modelling and carbon accounting, yet how forecasting models
+\emph{transfer across ecosystem boundaries} remains poorly understood.
+Classical transfer-learning theory predicts a penalty: a model trained on
+one biome should forecast a similar biome better than a dissimilar one.
+We benchmark TEMPO, a pretrained time-series foundation model, in both
+zero-shot and fine-tuned configurations against XGBoost, Random Forest and
+an LSTM for 96-hour NEE forecasting across contrasting FLUXNET2015
+ecosystems: five wetland training sites and two held-out test sites, one
+wetland (UK-AMo) and one forest (SE-Htm). The conventional models exhibit
+the expected penalty, degrading by 29--61\% in $R^2$ when transferring from
+the same-ecosystem wetland site to the cross-ecosystem forest site.
+TEMPO \emph{inverts} this behaviour: fine-tuned, it attains $R^2=0.728$ on
+the cross-ecosystem forest site versus $R^2=0.599$ on the same-ecosystem
+wetland site---a $-21.6\%$ ``penalty'', i.e.\ an improvement when crossing
+the boundary. All pairwise differences are significant ($p<0.001$, 1000-sample
+bootstrap, paired $t$-tests, Diebold--Mariano). We attribute the inversion to
+alignment between the forest's regular diurnal photosynthetic cycle and the
+model's pretraining distribution, and we report the result honestly alongside
+its central limitation: the baselines use 19 covariates whereas TEMPO is
+univariate. The finding suggests that for foundation models, distributional
+alignment with pretraining can outweigh nominal domain match.
+\end{abstract}
+
+%% CCS concepts: replace with the exact codes/XML pasted from
+%% https://dl.acm.org/ccs before submission. The \ccsdesc lines below render
+%% without the CCSXML block and are the most likely matches.
+\ccsdesc[500]{Computing methodologies~Transfer learning}
+\ccsdesc[300]{Computing methodologies~Neural networks}
+\ccsdesc[300]{Applied computing~Earth and atmospheric sciences}
+
+\keywords{time-series foundation models, transfer learning, carbon flux,
+net ecosystem exchange, FLUXNET, NEE forecasting}
+
+\maketitle
+
+% =====================================================================
+\section{Introduction}
+% =====================================================================
+
+Net ecosystem exchange (NEE) quantifies the net flux of carbon dioxide
+between the terrestrial biosphere and the atmosphere and is a primary
+determinant of whether an ecosystem acts as a carbon sink or source.
+Reliable short-horizon NEE forecasts support carbon accounting, the design
+of monitoring networks, and the assimilation of flux data into Earth-system
+models. The FLUXNET2015 network of eddy-covariance towers~\cite{pastorello2020fluxnet}
+has enabled data-driven NEE modelling at scale, from regression-based
+upscaling~\cite{tramontana2016predicting} to global products~\cite{jung2020fluxcom}.
+
+A persistent obstacle is \emph{transferability}. Flux towers are sparse and
+unevenly distributed across biomes, so any operational model must forecast
+sites and ecosystems it was not trained on. Classical transfer-learning
+theory~\cite{pan2010survey,zhuang2021comprehensive} predicts a penalty that
+grows with the distance between source and target domains: a model trained on
+wetlands should forecast an unseen \emph{wetland} better than an unseen
+\emph{forest}. Pretrained time-series foundation models~\cite{cao2024tempo}
+complicate this picture. Trained on large, heterogeneous corpora, their
+cross-domain transfer behaviour in the geosciences---and across ecosystem
+boundaries in particular---is essentially unstudied.
+
+This paper asks a single question: \emph{does a time-series foundation model
+obey the classical cross-ecosystem transfer penalty in NEE forecasting?}
+We find that it does not. Benchmarking TEMPO against XGBoost, Random Forest
+and an LSTM on five wetland training sites and two contrasting held-out test
+sites, we observe that the conventional models pay the expected penalty
+when transferring from a wetland to a forest, whereas the foundation model
+\emph{improves} across that same boundary.
+
+\noindent\textbf{Contributions.}
+\begin{itemize}
+  \item \textbf{The inverted transfer penalty.} We document that fine-tuned
+        TEMPO forecasts the cross-ecosystem forest site ($R^2=0.728$) better
+        than the same-ecosystem wetland site ($R^2=0.599$), a $-21.6\%$
+        penalty, while three conventional baselines degrade by $29$--$61\%$
+        across the identical boundary.
+  \item \textbf{A baseline-versus-foundation contrast of negative transfer.}
+        Across coverage and leave-one-site-out configurations, $33$ of $60$
+        baseline model--configuration--site combinations ($55\%$) exhibit
+        negative transfer, isolating a failure mode the foundation model
+        avoids.
+  \item \textbf{An honest mechanism and limitations.} We argue the inversion
+        reflects alignment between the forest's regular photosynthetic cycle
+        and TEMPO's pretraining distribution, and we state plainly the
+        information asymmetry (multivariate baselines vs.\ univariate TEMPO)
+        that bounds the claim.
+\end{itemize}
+
+% =====================================================================
+\section{Related Work}
+% =====================================================================
+
+\paragraph{Time-series foundation models.}
+A recent class of models pretrains a single network on large, diverse
+time-series corpora and applies it to unseen series with little or no
+task-specific training. TEMPO~\cite{cao2024tempo} is a prompt-based
+generative pretrained transformer that decomposes a series into trend,
+seasonal and residual components and forecasts them with a GPT-style
+backbone. We evaluate the publicly released 80M-parameter checkpoint. Our
+focus is not the architecture but its \emph{transfer behaviour} across
+ecosystem types, which prior work has not examined for carbon flux.
+
+\paragraph{Machine learning for carbon flux.}
+Data-driven NEE modelling has a long lineage. Tramontana et
+al.~\cite{tramontana2016predicting} benchmark regression algorithms across
+global FLUXNET sites; FLUXCOM~\cite{jung2020fluxcom} upscales fluxes to the
+globe; and partitioning methods~\cite{reichstein2005separation} underpin the
+NEE products themselves. Tree ensembles such as Random
+Forests~\cite{breiman2001random} and gradient boosting~\cite{chen2016xgboost}
+remain strong, widely used baselines, with recurrent
+networks~\cite{hochreiter1997lstm} capturing temporal structure.
+
+\paragraph{Transfer learning.}
+The classical framing~\cite{pan2010survey,zhuang2021comprehensive} predicts
+that performance degrades as the source and target domains diverge, and warns
+of \emph{negative transfer} when source data harm target performance. Our
+contribution is to show that a pretrained foundation model can violate the
+first prediction across ecosystem boundaries while the conventional baselines
+obey it---and to quantify the negative transfer the baselines suffer.
+
+% =====================================================================
+\section{Data and Methods}
+% =====================================================================
+
+\subsection{Sites}
+We use seven FLUXNET2015 eddy-covariance sites (Table~\ref{tab:sites}),
+all distributed under CC-BY-4.0. Five wetland sites form the training pool;
+two sites are held out for testing: UK-AMo, a blanket bog, gives a
+\emph{wetland-to-wetland} (same-ecosystem) transfer, and SE-Htm, a managed
+Norway-spruce forest, gives a \emph{wetland-to-forest} (cross-ecosystem)
+transfer. This design isolates the effect of crossing an ecosystem boundary
+while holding the training distribution fixed.
+
+% Source: data/metadata/site_characteristics.csv
+\begin{table}[t]
+  \centering
+  \caption{FLUXNET2015 sites. Five wetlands are used for training; UK-AMo
+  (wetland) and SE-Htm (forest) are held out for testing.}
+  \label{tab:sites}
+  \small
+  \begin{tabular}{@{}llllr@{}}
+    \toprule
+    Site & Country & Ecosystem & Climate & Records \\
+    \midrule
+    \multicolumn{5}{@{}l}{\emph{Training (wetland)}}\\
+    FI-Lom & Finland & Wetland & Subarctic (Dfc)        & 5\,348 \\
+    GL-ZaF & Greenland & Wetland & Tundra (ET)          & 2\,789 \\
+    IE-Cra & Ireland & Wetland & Temp.\ oceanic (Cfb)   & 8\,783 \\
+    DE-Akm & Germany & Wetland & Temp.\ oceanic (Cfb)   & 3\,836 \\
+    FR-LGt & France & Wetland & Temp.\ oceanic (Cfb)    & 5\,294 \\
+    \midrule
+    \multicolumn{5}{@{}l}{\emph{Test (held out)}}\\
+    UK-AMo & U.K. & Wetland & Subpolar oceanic (Cfc)    & 9\,485 \\
+    SE-Htm & Sweden & Forest & Temp.\ oceanic (Cfb)     & 5\,437 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Preprocessing}
+Half-hourly observations are aggregated to hourly resolution. A sliding
+window maps a 336-hour (two-week) lookback to a 96-hour forecast horizon.
+Features are $z$-scored per site using statistics computed within each split
+to prevent leakage. The wetland training pool yields $23{,}899$ forecast
+sequences.
+
+\subsection{Models}
+We compare five forecasters under identical windowing:
+\begin{itemize}
+  \item \textbf{TEMPO (zero-shot)}: the pretrained 80M-parameter checkpoint
+        applied with no task training.
+  \item \textbf{TEMPO (fine-tuned)}: the same checkpoint fine-tuned on the
+        wetland pool (Adam, learning rate $10^{-4}$, batch size $32$, up to
+        $50$ epochs with early stopping, patience $10$).
+  \item \textbf{XGBoost} and \textbf{Random Forest}: gradient-boosted and
+        bagged tree ensembles ($200$ trees).
+  \item \textbf{LSTM}: a two-layer recurrent network ($\sim$221k parameters).
+\end{itemize}
+
+\paragraph{Information asymmetry (stated openly).}
+The comparison is deliberately not matched on inputs. The three baselines are
+\emph{multivariate}: they receive $19$ covariates per timestep (meteorological
+drivers and satellite indices). TEMPO is \emph{univariate}: it sees only the
+NEE target series. This asymmetry favours the baselines on information and is
+the principal limitation of the present study; removing it (covariate
+conditioning of the foundation model) is the subject of planned follow-up
+work. We report results as they stand rather than equalising inputs, and we
+return to this point in the discussion.
+
+\subsection{Metrics and statistics}
+We report $R^2$, RMSE and MAE on the held-out test sites. Uncertainty is
+quantified with 1000-sample bootstrap 95\% confidence intervals; pairwise
+model differences are assessed with paired $t$-tests and the modified
+Diebold--Mariano test on 96-hour forecast errors, with Cohen's $d$ for effect
+size. All random seeds are fixed at $42$.
+
+% =====================================================================
+\section{Results}
+% =====================================================================
+
+\subsection{Overall benchmark}
+\label{sec:benchmark}
+Table~\ref{tab:benchmark} reports the primary benchmark; Figure~\ref{fig:allmodels}
+visualises it. On the same-ecosystem wetland site (UK-AMo), the multivariate
+baselines are competitive: Random Forest reaches $R^2=0.584$, close to
+fine-tuned TEMPO's $R^2=0.599$, with the two separated by a small effect
+(Cohen's $d=0.14$ on MAE). On the cross-ecosystem forest site (SE-Htm), the
+picture changes sharply: both TEMPO variants exceed $R^2=0.72$ while every
+baseline collapses below $R^2=0.28$. All reported pairwise differences are
+significant at $p<0.001$.
+
+% Source: results/metrics/all_models_summary.csv (R2, RMSE, MAE)
+%         results/analysis/statistical_summary.txt (95% bootstrap CIs on RMSE)
+\begin{table}[t]
+  \centering
+  \caption{Primary 96-hour forecasting benchmark on the two held-out test
+  sites. RMSE shown with 1000-sample bootstrap 95\% CI. Lower RMSE/MAE and
+  higher $R^2$ are better. Source: \texttt{all\_models\_summary.csv},
+  \texttt{statistical\_summary.txt}.}
+  \label{tab:benchmark}
+  \small
+  \begin{tabular}{@{}llccc@{}}
+    \toprule
+    Site & Model & RMSE (95\% CI) & MAE & $R^2$ \\
+    \midrule
+    \multirow{5}{*}{UK-AMo}
+      & TEMPO Fine-Tuned & 2.318 [2.312, 2.326] & 1.452 & \textbf{0.599} \\
+      & Random Forest    & 2.362 [2.357, 2.368] & 1.693 & 0.584 \\
+      & XGBoost          & 2.679 [2.674, 2.684] & 2.047 & 0.464 \\
+      & TEMPO Zero-Shot  & 2.874 [2.866, 2.882] & 1.754 & 0.384 \\
+      & LSTM             & 2.930 [2.923, 2.937] & 1.970 & 0.359 \\
+    \midrule
+    \multirow{5}{*}{SE-Htm}
+      & TEMPO Zero-Shot  & 3.622 [3.611, 3.633] & 2.426 & \textbf{0.752} \\
+      & TEMPO Fine-Tuned & 3.794 [3.783, 3.804] & 2.602 & 0.728 \\
+      & XGBoost          & 6.178 [6.164, 6.192] & 4.559 & 0.279 \\
+      & Random Forest    & 6.212 [6.199, 6.225] & 4.520 & 0.271 \\
+      & LSTM             & 6.404 [6.389, 6.418] & 4.638 & 0.225 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/all_models_comparison.pdf}
+  \caption{Model comparison across the two held-out test sites. The baselines
+  are competitive on the wetland site but collapse on the forest site, where
+  both TEMPO variants remain strong.}
+  \label{fig:allmodels}
+\end{figure}
+
+\subsection{The inverted transfer penalty}
+\label{sec:inversion}
+The headline result follows from contrasting each model's same-ecosystem
+performance (UK-AMo, wetland) with its cross-ecosystem performance (SE-Htm,
+forest). We define the transfer penalty as the relative drop in $R^2$ when
+moving from the wetland to the forest site,
+\[
+  \mathrm{penalty} = \frac{R^2_{\mathrm{wetland}}-R^2_{\mathrm{forest}}}
+                          {R^2_{\mathrm{wetland}}},
+\]
+so a positive value is the classically expected degradation and a negative
+value is an inversion. Table~\ref{tab:penalty} reports these values from the
+dedicated transfer protocol, and Figure~\ref{fig:transfermatrix} shows the
+full transfer matrix.
+
+% Source: results/transfer_learning/TRANSFER_LEARNING_SUMMARY.txt (section H4)
+%         results/transfer_learning/transfer_matrix.csv (100%-coverage config)
+% NOTE: the transfer protocol uses matched 5,000-sample training subsamples,
+% so baseline R^2 here differ slightly from the full-test benchmark in Table 2.
+% TEMPO R^2 are identical across both (0.599 wetland / 0.728 forest).
+\begin{table}[t]
+  \centering
+  \caption{Cross-ecosystem transfer penalty (wetland $\rightarrow$ forest).
+  Positive $=$ classical degradation; negative $=$ inversion. The three
+  baselines degrade by $29$--$61\%$; fine-tuned TEMPO improves by $21.6\%$.
+  Source: \texttt{TRANSFER\_LEARNING\_SUMMARY.txt} (H4),
+  \texttt{transfer\_matrix.csv}.}
+  \label{tab:penalty}
+  \small
+  \begin{tabular}{@{}lccc@{}}
+    \toprule
+    Model & UK-AMo $R^2$ & SE-Htm $R^2$ & Penalty \\
+          & (wetland) & (forest) &  \\
+    \midrule
+    Random Forest    & 0.559 & 0.332 & $+0.227$\ ($+40.6\%$) \\
+    XGBoost          & 0.532 & 0.376 & $+0.157$\ ($+29.4\%$) \\
+    LSTM             & 0.468 & 0.184 & $+0.285$\ ($+60.8\%$) \\
+    \textbf{TEMPO Fine-Tuned} & 0.599 & 0.728 & $\mathbf{-0.129}$\ ($\mathbf{-21.6\%}$) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/transfer_matrix_heatmap.png}
+  \caption{Cross-ecosystem transfer matrix. The baselines lose substantial
+  skill moving from the wetland to the forest site, whereas TEMPO gains skill.}
+  \label{fig:transfermatrix}
+\end{figure}
+
+Every baseline pays the expected penalty---$+40.6\%$ (Random Forest),
+$+29.4\%$ (XGBoost) and $+60.8\%$ (LSTM)---losing skill exactly where theory
+predicts. Fine-tuned TEMPO does the opposite, recording a $-21.6\%$ penalty:
+it is markedly \emph{better} on the cross-ecosystem forest site than on the
+same-ecosystem wetland site. On the forest site this lifts fine-tuned TEMPO to
+a $+93.7\%$ relative $R^2$ advantage over the best baseline, versus a modest
+$+7.1\%$ on the wetland site. The differences are statistically decisive: on
+SE-Htm, fine-tuned TEMPO beats XGBoost with $p<0.001$ and a medium effect
+(Cohen's $d=0.553$), and the same holds against Random Forest and the LSTM.
+
+\subsection{Mechanism}
+\label{sec:mechanism}
+Why does crossing the boundary \emph{help} the foundation model? The error
+distributions (Figure~\ref{fig:errordist}) show that the baselines develop
+heavy-tailed, biased errors on the forest site that they do not exhibit on the
+wetland site, whereas TEMPO's errors stay comparatively concentrated. We
+attribute this to distributional alignment with pretraining. The managed
+spruce forest has a strong, regular diurnal photosynthetic cycle---a clean,
+periodic signal of the kind that dominates the large generic corpora on which
+foundation models are pretrained. The wetlands, by contrast, exhibit
+suppressed and irregular flux driven by water-table and temperature dynamics,
+which is comparatively out-of-distribution for a generic time-series prior.
+For TEMPO, then, alignment with the pretraining distribution appears to matter
+more than nominal ecosystem match; for the covariate-driven baselines, the
+forest's NEE dynamics are simply harder to fit from the available drivers.
+
+A complementary ecosystem-prompting experiment supports the alignment view:
+fine-tuning TEMPO on forest-aligned data raises forest-site performance to
+$R^2=0.766$, a $+5.3\%$ gain over the universal model's $R^2=0.728$,
+indicating that the forest signal is not merely easy but specifically
+well-matched to what the model represents.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/tempo_error_distributions.pdf}
+  \caption{Forecast error distributions for TEMPO on the held-out sites.
+  Errors remain concentrated on the forest site, consistent with alignment
+  between its regular diurnal cycle and the model's pretraining distribution.}
+  \label{fig:errordist}
+\end{figure}
+
+\subsection{Negative transfer across configurations}
+\label{sec:negtransfer}
+Sweeping training-data coverage ($20$--$100\%$) and leave-one-site-out
+removals over the three baselines, $33$ of $60$ model--configuration--site
+combinations ($55\%$) exhibit negative transfer, where adding source data
+\emph{harms} target performance relative to the full-data reference. The
+effect is most severe under low coverage on the wetland site (e.g.\ Random
+Forest at $20\%$ data, $\Delta R^2 = -0.72$) and recurs in leave-one-site-out
+removals (e.g.\ excluding DE-Akm costs Random Forest $\Delta R^2=-0.20$ on
+UK-AMo). This is the conventional failure mode the foundation model avoids,
+and it reinforces the contrast drawn in Section~\ref{sec:inversion}.
+
+% =====================================================================
+\section{Discussion}
+% =====================================================================
+
+\paragraph{Implications.}
+The inverted penalty suggests that foundation models can behave
+counter-intuitively in the geosciences. Where classical theory anchors
+performance to source--target domain match, a pretrained model's skill appears
+to track alignment with its \emph{pretraining} distribution. A regular,
+periodic ecosystem signal can therefore be forecast more accurately than an
+irregular one even when the latter is nominally closer to the training biome.
+For practitioners assembling NEE forecasting systems across sparse tower
+networks, this implies that foundation models may generalise to
+under-represented but well-behaved ecosystems better than transfer theory
+would predict.
+
+\paragraph{Limitations.}
+Three caveats bound the claim. First, the \emph{information asymmetry}: the
+baselines use $19$ covariates while TEMPO is univariate, so the comparison is
+not input-matched; the foundation model's advantage on the forest site is
+achieved with strictly less information, but the asymmetry must be named, not
+hidden. Second, we evaluate a \emph{single} foundation model. Third, the
+inversion is demonstrated on \emph{two} held-out test sites; the direction of
+the effect is clear and statistically strong, but its breadth across biomes
+remains to be established.
+
+\paragraph{Outlook.}
+A natural next step is to remove the information asymmetry by conditioning the
+foundation model on the same covariates available to the baselines, and to
+broaden the evaluation to additional ecosystems and a global pool of sites.
+We leave these extensions to future work.
+
+% =====================================================================
+\section{Conclusion}
+% =====================================================================
+
+Across contrasting FLUXNET ecosystems, conventional NEE forecasters pay the
+classical cross-ecosystem transfer penalty---degrading by $29$--$61\%$ in
+$R^2$ from a same-ecosystem wetland site to a cross-ecosystem forest
+site---whereas the pretrained TEMPO foundation model inverts it, forecasting
+the forest site ($R^2=0.728$) better than the wetland site ($R^2=0.599$).
+The result indicates that alignment with a foundation model's pretraining
+distribution can outweigh nominal ecosystem match. Future work will equalise
+model inputs through covariate conditioning and test the inversion across a
+wider range of ecosystems.
+
+% =====================================================================
+\begin{acks}
+We thank Po Yang for supervision; the FLUXNET community and individual site
+principal investigators for maintaining the open FLUXNET2015 database; the
+ICOS network; and the developers of TEMPO for releasing the model weights.
+%% AI-use disclosure: add a proportional disclosure here if any text, figures
+%% or code newly created for this paper were AI-generated, per ACM policy.
+%% Editing or polishing the authors' own writing requires no disclosure.
+\end{acks}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{references}
+
+\end{document}
