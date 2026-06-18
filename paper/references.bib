@@ -1,110 +1,844 @@
-% References for the AI4Science 2026 conference paper.
-% Seeded from README.md. NOTE: the foundation model actually loaded by the
-% code is TEMPO (Melady/TEMPO, checkpoint TEMPO-80M_v1.pth), cited below as
-% Cao et al. 2024 -- NOT MOMENT. The README's MOMENT/Goswami entry was a
-% mislabel and is intentionally omitted.
+% ============================================================
+% FLUXNET / CARBON FLUX INFRASTRUCTURE
+% ============================================================
+
+@article{baldocchi2001fluxnet,
+  author    = {Baldocchi, Dennis and Falge, Eva and Gu, Lianhong and Olson, Richard
+               and Hollinger, David and Running, Steve and Anthoni, Peter and
+               Bernhofer, Christian and Davis, Kenneth and Evans, Robert and others},
+  title     = {{FLUXNET}: A new tool to study the temporal and spatial variability of
+               ecosystem-scale carbon dioxide, water vapor, and energy flux densities},
+  journal   = {Bulletin of the American Meteorological Society},
+  volume    = {82},
+  number    = {11},
+  pages     = {2415--2434},
+  year      = {2001},
+  doi       = {10.1175/1520-0477(2001)082<2415:FANTTS>2.3.CO;2},
+}
+
+@article{pastorello2020fluxnet2015,
+  author    = {Pastorello, Gilberto and Trotta, Carlo and Canfora, Eleonora and
+               Chu, Housen and Christianson, Danielle and Cheah, You-Wei and
+               Poindexter, Cristina and Chen, Jiquan and Elbashandy, Abdelrahman and
+               Humphrey, Marty and others},
+  title     = {The {FLUXNET2015} dataset and the {ONEFlux} processing pipeline for
+               eddy covariance data},
+  journal   = {Scientific Data},
+  volume    = {7},
+  number    = {1},
+  pages     = {225},
+  year      = {2020},
+  doi       = {10.1038/s41597-020-0534-3},
+}
+
+@article{baldocchi2019modern,
+  author    = {Baldocchi, Dennis},
+  title     = {How eddy covariance flux measurements have contributed to our understanding
+               of {G}lobal {C}hange {B}iology},
+  journal   = {Global Change Biology},
+  volume    = {26},
+  number    = {1},
+  pages     = {242--260},
+  year      = {2019},
+  doi       = {10.1111/gcb.14807},
+}
+
+@article{friedlingstein2023global,
+  author    = {Friedlingstein, Pierre and O'Sullivan, Michael and Jones, Matthew W.
+               and Andrew, Robbie M. and Bakker, Dorothee C.~E. and Hauck, Judith and
+               Landsch{\"u}tzer, Peter and Le~Qu{\'e}r{\'e}, Corinne and Luijkx,
+               Ingrid T. and Peters, Glen P. and others},
+  title     = {Global {C}arbon {B}udget 2023},
+  journal   = {Earth System Science Data},
+  volume    = {15},
+  number    = {12},
+  pages     = {5301--5369},
+  year      = {2023},
+  doi       = {10.5194/essd-15-5301-2023},
+}
+
+% ============================================================
+% CLIMATE CLASSIFICATION
+% ============================================================
+
+@article{kottek2006koppen,
+  author    = {Kottek, Markus and Grieser, J{\"u}rgen and Beck, Christoph and Rudolf, Bruno and Rubel, Franz},
+  title     = {World map of the {K}{\"o}ppen--{G}eiger climate classification updated},
+  journal   = {Meteorologische Zeitschrift},
+  volume    = {15},
+  number    = {3},
+  pages     = {259--263},
+  year      = {2006},
+  doi       = {10.1127/0941-2948/2006/0130},
+}
+
+
+% ============================================================
+% CLIMATE CHANGE POLICY AND IPCC
+% ============================================================
+
+@techreport{unfccc2015paris,
+  author      = {{UNFCCC}},
+  title       = {Paris {A}greement},
+  institution = {United Nations Framework Convention on Climate Change},
+  year        = {2015},
+  url         = {https://unfccc.int/sites/default/files/english_paris_agreement.pdf},
+}
+
+@techreport{ipcc2021ar6wg1,
+  author      = {{IPCC}},
+  title       = {Climate {C}hange 2021: The {P}hysical {S}cience {B}asis. {C}ontribution of
+                 {W}orking {G}roup {I} to the {S}ixth {A}ssessment {R}eport of the
+                 {I}ntergovernmental {P}anel on {C}limate {C}hange},
+  editor      = {Masson-Delmotte, V. and Zhai, P. and Pirani, A. and Connors, S.~L.
+                 and P{\'e}an, C. and Berger, S. and Caud, N. and Chen, Y. and Goldfarb,
+                 L. and Gomis, M.~I. and others},
+  institution = {Cambridge University Press},
+  year        = {2021},
+  doi         = {10.1017/9781009157896},
+}
+
+
+% ============================================================
+% MACHINE LEARNING IN EARTH SCIENCE
+% ============================================================
+
+@article{reichstein2019deep,
+  author    = {Reichstein, Markus and Camps-Valls, Gustau and Stevens, Bjorn and
+               Jung, Martin and Denzler, Joachim and Carvalhais, Nuno and Prabhat},
+  title     = {Deep learning and process understanding for data-driven {E}arth system science},
+  journal   = {Nature},
+  volume    = {566},
+  number    = {7743},
+  pages     = {195--204},
+  year      = {2019},
+  doi       = {10.1038/s41586-019-0912-1},
+}
+
+@article{jung2020scaling,
+  author    = {Jung, Martin and Schwalm, Christopher and Migliavacca, Mirco and
+               Walther, Sophia and Camps-Valls, Gustau and Koirala, Sujan and
+               Anthoni, Peter and Besnard, Simon and Bodesheim, Paul and Carvalhais,
+               Nuno and others},
+  title     = {Scaling carbon fluxes from eddy covariance sites to globe: synthesis and
+               evaluation of the {FLUXCOM} approach},
+  journal   = {Biogeosciences},
+  volume    = {17},
+  number    = {5},
+  pages     = {1343--1365},
+  year      = {2020},
+  doi       = {10.5194/bg-17-1343-2020},
+}
+
+@article{tramontana2016predicting,
+  author    = {Tramontana, Gianluca and Jung, Martin and Schwalm, Christopher R. and
+               Ichii, Kazuhito and Camps-Valls, Gustau and R{\'a}duly, Botond and
+               Reichstein, Markus and Arain, M.~Altaf and Cescatti, Alessandro and
+               Kiely, Gerard and others},
+  title     = {Predicting carbon dioxide and energy fluxes across global {FLUXNET} sites with
+               regression algorithms},
+  journal   = {Biogeosciences},
+  volume    = {13},
+  number    = {14},
+  pages     = {4291--4313},
+  year      = {2016},
+  doi       = {10.5194/bg-13-4291-2016},
+}
+
+@article{bodesheim2018upscaled,
+  author    = {Bodesheim, Paul and Jung, Martin and Gans, Fabian and Mahecha, Miguel D.
+               and Reichstein, Markus},
+  title     = {Upscaled diurnal cycles of land-atmosphere fluxes: a new global half-hourly
+               data product},
+  journal   = {Earth System Science Data},
+  volume    = {10},
+  number    = {3},
+  pages     = {1327--1365},
+  year      = {2018},
+  doi       = {10.5194/essd-10-1327-2018},
+}
+
+@article{besnard2019memory,
+  author    = {Besnard, Simon and Carvalhais, Nuno and Arain, M.~Altaf and Black, Andrew
+               and de~Bruin, Sytze and Buchmann, Nina and Cescatti, Alessandro and
+               Chen, Jiquan and Clevers, Jan G. P.~W. and Desai, Ankur R. and others},
+  title     = {Memory effects of climate and vegetation affecting net ecosystem {CO2}
+               fluxes in global forests},
+  journal   = {PLoS ONE},
+  volume    = {14},
+  number    = {2},
+  pages     = {e0211510},
+  year      = {2019},
+  doi       = {10.1371/journal.pone.0211510},
+}
+
+% ============================================================
+% TRANSFER LEARNING
+% ============================================================
+
+@article{pan2010transfer,
+  author    = {Pan, Sinno Jialin and Yang, Qiang},
+  title     = {A survey on transfer learning},
+  journal   = {IEEE Transactions on Knowledge and Data Engineering},
+  volume    = {22},
+  number    = {10},
+  pages     = {1345--1359},
+  year      = {2010},
+  doi       = {10.1109/TKDE.2009.191},
+}
+
+@incollection{torrey2010transfer,
+  author    = {Torrey, Lisa and Shavlik, Jude},
+  title     = {Transfer learning},
+  booktitle = {Handbook of Research on Machine Learning Applications and Trends},
+  pages     = {242--264},
+  year      = {2010},
+  publisher = {IGI Global},
+  url       = {https://doi.org/10.4018/978-1-60566-766-9.ch011},
+}
+
+@article{weiss2016transfer,
+  author    = {Weiss, Karl and Khoshgoftaar, Taghi M. and Wang, DingDing},
+  title     = {A survey of transfer learning},
+  journal   = {Journal of Big Data},
+  volume    = {3},
+  number    = {1},
+  pages     = {9},
+  year      = {2016},
+  doi       = {10.1186/s40537-016-0043-6},
+}
+
+% ============================================================
+% TIME-SERIES FOUNDATION MODELS
+% ============================================================
 
 @inproceedings{cao2024tempo,
-  author    = {Cao, Defu and Jia, Furong and Arik, Sercan O. and Pfister, Tomas and Zheng, Yixiang and Ye, Wen and Liu, Yan},
-  title      = {{TEMPO}: Prompt-based Generative Pre-trained Transformer for Time Series Forecasting},
-  booktitle  = {Proceedings of the International Conference on Learning Representations (ICLR)},
-  year       = {2024},
-  note       = {arXiv:2310.04948}
+  author    = {Cao, Defu and Jia, Furong and Arik, Sercan O. and Pfister, Tomas and
+               Zheng, Yuxiao and Ye, Wen and Liu, Yan},
+  title     = {{TEMPO}: Prompt-based Generative Pre-trained Transformer for Time Series
+               Forecasting},
+  booktitle = {Proceedings of the International Conference on Learning Representations
+               (ICLR 2024)},
+  year      = {2024},
+  url       = {https://openreview.net/forum?id=YH5w12OUuU},
 }
+
+@misc{bommasani2021foundation,
+  author    = {Bommasani, Rishi and Hudson, Drew A. and Adeli, Ehsan and Altman, Russ
+               and Arora, Simran and von Arx, Sydney and Bernstein, Michael S. and
+               Bohg, Jeannette and Bosselut, Antoine and Brunskill, Emma and others},
+  title     = {On the opportunities and risks of foundation models},
+  year      = {2021},
+  eprint    = {2108.07258},
+  archivePrefix = {arXiv},
+  url       = {https://arxiv.org/abs/2108.07258},
+}
+
+@inproceedings{zhou2023one,
+  author    = {Zhou, Tian and Niu, Peisong and Wang, Xue and Sun, Liang and Jin, Rong},
+  title     = {One fits all: {P}ower general time series analysis by pretrained {LM}},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS 2023)},
+  volume    = {36},
+  year      = {2023},
+  url       = {https://proceedings.neurips.cc/paper_files/paper/2023/hash/86c17de05579cde52025f9984e6e2ebb-Abstract-Conference.html},
+}
+
+@inproceedings{das2024timesfm,
+  author    = {Das, Abhimanyu and Kong, Weihao and Sen, Rajat and Zhou, Yichen},
+  title     = {A decoder-only foundation model for time-series forecasting},
+  booktitle = {Proceedings of the 41st International Conference on Machine Learning
+               ({ICML} 2024)},
+  year      = {2024},
+  eprint    = {2310.10688},
+  archivePrefix = {arXiv},
+  url       = {https://arxiv.org/abs/2310.10688},
+  note      = {Licensed under {CC BY} 4.0},
+}
+
+@misc{rasul2024lag,
+  author    = {Rasul, Kashif and Ashok, Arjun and Williams, Andrew Robert and
+               Khorasani, Hena and Adamopoulos, George and Bhagwatkar, Rishika and
+               Bilo{\v{s}}, Marin and Ghonia, Haidar and Hassen, Nadhir Vincent and
+               Schneider, Anderson and others},
+  title     = {Lag-{L}{L}a{M}{A}: Llama for time series forecasting},
+  year      = {2023},
+  eprint    = {2310.08278},
+  archivePrefix = {arXiv},
+  url       = {https://arxiv.org/abs/2310.08278},
+}
+
+% ============================================================
+% MACHINE LEARNING METHODS
+% ============================================================
 
 @inproceedings{chen2016xgboost,
   author    = {Chen, Tianqi and Guestrin, Carlos},
-  title      = {{XGBoost}: A Scalable Tree Boosting System},
-  booktitle  = {Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD)},
-  pages      = {785--794},
-  year       = {2016},
-  publisher  = {ACM}
+  title     = {{XGBoost}: A scalable tree boosting system},
+  booktitle = {Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge
+               Discovery and Data Mining},
+  pages     = {785--794},
+  year      = {2016},
+  doi       = {10.1145/2939672.2939785},
 }
 
 @article{breiman2001random,
   author    = {Breiman, Leo},
-  title      = {Random Forests},
-  journal    = {Machine Learning},
-  volume     = {45},
-  number     = {1},
-  pages      = {5--32},
-  year       = {2001}
+  title     = {Random forests},
+  journal   = {Machine Learning},
+  volume    = {45},
+  number    = {1},
+  pages     = {5--32},
+  year      = {2001},
+  doi       = {10.1023/A:1010933404324},
 }
 
-@article{hochreiter1997lstm,
-  author    = {Hochreiter, Sepp and Schmidhuber, J\"{u}rgen},
-  title      = {Long Short-Term Memory},
-  journal    = {Neural Computation},
-  volume     = {9},
-  number     = {8},
-  pages      = {1735--1780},
-  year       = {1997}
+@article{hochreiter1997long,
+  author    = {Hochreiter, Sepp and Schmidhuber, J{\"u}rgen},
+  title     = {Long short-term memory},
+  journal   = {Neural Computation},
+  volume    = {9},
+  number    = {8},
+  pages     = {1735--1780},
+  year      = {1997},
+  doi       = {10.1162/neco.1997.9.8.1735},
 }
 
-@article{pastorello2020fluxnet,
-  author    = {Pastorello, Gilberto and others},
-  title      = {The {FLUXNET2015} Dataset and the {ONEFlux} Processing Pipeline for Eddy Covariance Data},
-  journal    = {Scientific Data},
-  volume     = {7},
-  number     = {1},
-  pages      = {225},
-  year       = {2020}
+@inproceedings{vaswani2017attention,
+  author    = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob
+               and Jones, Llion and Gomez, Aidan N and Kaiser, {\L}ukasz and
+               Polosukhin, Illia},
+  title     = {Attention is all you need},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS 2017)},
+  volume    = {30},
+  year      = {2017},
+  url       = {https://proceedings.neurips.cc/paper/2017/hash/3f5ee243547dee91fbd053c1c4a845aa-Abstract.html},
 }
 
-@article{reichstein2005separation,
-  author    = {Reichstein, Markus and others},
-  title      = {On the Separation of Net Ecosystem Exchange into Assimilation and Ecosystem Respiration: Review and Improved Algorithm},
-  journal    = {Global Change Biology},
-  volume     = {11},
-  number     = {9},
-  pages      = {1424--1439},
-  year       = {2005}
-}
+% ============================================================
+% UNCERTAINTY QUANTIFICATION AND ACTIVE LEARNING
+% ============================================================
 
-@article{pan2010survey,
-  author    = {Pan, Sinno Jialin and Yang, Qiang},
-  title      = {A Survey on Transfer Learning},
-  journal    = {IEEE Transactions on Knowledge and Data Engineering},
-  volume     = {22},
-  number     = {10},
-  pages      = {1345--1359},
-  year       = {2010}
-}
-
-@article{zhuang2021comprehensive,
-  author    = {Zhuang, Fuzhen and others},
-  title      = {A Comprehensive Survey on Transfer Learning},
-  journal    = {Proceedings of the IEEE},
-  volume     = {109},
-  number     = {1},
-  pages      = {43--76},
-  year       = {2021}
-}
-
-@article{jung2020fluxcom,
-  author    = {Jung, Martin and others},
-  title      = {Scaling Carbon Fluxes from Eddy Covariance Sites to Globe: Synthesis and Evaluation of the {FLUXCOM} Approach},
-  journal    = {Biogeosciences},
-  volume     = {17},
-  number     = {5},
-  pages      = {1343--1365},
-  year       = {2020}
-}
-
-@article{tramontana2016predicting,
-  author    = {Tramontana, Gianluca and others},
-  title      = {Predicting Carbon Dioxide and Energy Fluxes Across Global {FLUXNET} Sites with Regression Algorithms},
-  journal    = {Biogeosciences},
-  volume     = {13},
-  number     = {14},
-  pages      = {4291--4313},
-  year       = {2016}
+@article{cohn1996active,
+  author    = {Cohn, David A. and Ghahramani, Zoubin and Jordan, Michael I.},
+  title     = {Active learning with statistical models},
+  journal   = {Journal of Artificial Intelligence Research},
+  volume    = {4},
+  pages     = {129--145},
+  year      = {1996},
+  doi       = {10.1613/jair.295},
 }
 
 @techreport{settles2009active,
-  author    = {Settles, Burr},
-  title      = {Active Learning Literature Survey},
+  author      = {Settles, Burr},
+  title       = {Active learning literature survey},
   institution = {University of Wisconsin--Madison},
-  number     = {Computer Sciences Technical Report 1648},
-  year       = {2009}
+  number      = {1648},
+  year        = {2009},
+  url         = {http://burrsettles.com/pub/settles.activelearning.pdf},
+}
+
+@article{diebold1995comparing,
+  author    = {Diebold, Francis X. and Mariano, Roberto S.},
+  title     = {Comparing predictive accuracy},
+  journal   = {Journal of Business \& Economic Statistics},
+  volume    = {13},
+  number    = {3},
+  pages     = {253--263},
+  year      = {1995},
+  doi       = {10.1080/07350015.1995.10524599},
+}
+
+% ============================================================
+% ENSEMBLE METHODS
+% ============================================================
+
+@incollection{dietterich2000ensemble,
+  author    = {Dietterich, Thomas G.},
+  title     = {Ensemble methods in machine learning},
+  booktitle = {Multiple Classifier Systems},
+  pages     = {1--15},
+  year      = {2000},
+  publisher = {Springer},
+  doi       = {10.1007/3-540-45014-9_1},
+}
+
+@article{wolpert1992stacked,
+  author    = {Wolpert, David H.},
+  title     = {Stacked generalization},
+  journal   = {Neural Networks},
+  volume    = {5},
+  number    = {2},
+  pages     = {241--259},
+  year      = {1992},
+  doi       = {10.1016/S0893-6080(05)80023-1},
+}
+
+% ============================================================
+% CARBON FOOTPRINT AND COMPUTATIONAL RESOURCES
+% ============================================================
+
+@misc{patterson2021carbon,
+  author    = {Patterson, David and Gonzalez, Joseph and Le, Quoc and Liang, Chen and
+               Munguia, Lluis-Miquel and Rothchild, Daniel and So, David and Texier,
+               Maud and Dean, Jeff},
+  title     = {Carbon emissions and large neural network training},
+  year      = {2021},
+  eprint    = {2104.10350},
+  archivePrefix = {arXiv},
+  url       = {https://arxiv.org/abs/2104.10350},
+}
+
+@article{henderson2020carbon,
+  author    = {Henderson, Peter and Hu, Jianing and Romoff, Joshua and Brunskill, Emma
+               and Jurafsky, Dan and Pineau, Joelle},
+  title     = {Towards the systematic reporting of the energy and carbon footprints of
+               machine learning},
+  journal   = {Journal of Machine Learning Research},
+  volume    = {21},
+  number    = {248},
+  pages     = {1--43},
+  year      = {2020},
+  url       = {https://jmlr.org/papers/v21/20-312.html},
+}
+
+% ============================================================
+% SOFTWARE AND TOOLS
+% ============================================================
+
+@misc{met2015cartopy,
+  author    = {{Met Office}},
+  title     = {Cartopy: a cartographic python library with a {Matplotlib} interface},
+  year      = {2010--2015},
+  url       = {https://scitools.org.uk/cartopy},
+  note      = {Accessed: March 2026},
+}
+
+@article{pedregosa2011scikit,
+  author    = {Pedregosa, Fabian and Varoquaux, Ga{\"e}l and Gramfort, Alexandre and
+               Michel, Vincent and Thirion, Bertrand and Grisel, Olivier and Blondel,
+               Mathieu and Prettenhofer, Peter and Weiss, Ron and Dubourg, Vincent and
+               others},
+  title     = {Scikit-learn: Machine learning in {P}ython},
+  journal   = {Journal of Machine Learning Research},
+  volume    = {12},
+  pages     = {2825--2830},
+  year      = {2011},
+  url       = {https://jmlr.org/papers/v12/pedregosa11a.html},
+}
+
+@inproceedings{paszke2019pytorch,
+  author    = {Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and
+               Bradbury, James and Chanan, Gregory and Killeen, Trevor and Lin, Zeming
+               and Gimelshein, Natalia and Antiga, Luca and others},
+  title     = {{PyTorch}: An imperative style, high-performance deep learning library},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS 2019)},
+  volume    = {32},
+  year      = {2019},
+  url       = {https://proceedings.neurips.cc/paper/2019/hash/bdbca288fee7f92f2bfa9f7012727740-Abstract.html},
+}
+
+% ============================================================
+% ADDITIONAL CARBON FLUX REFERENCES
+% ============================================================
+
+@article{schimel2015observing,
+  author    = {Schimel, David and Stephens, Britton B. and Fisher, Joshua B.},
+  title     = {Effect of increasing {CO2} on the terrestrial carbon cycle},
+  journal   = {Proceedings of the National Academy of Sciences},
+  volume    = {112},
+  number    = {2},
+  pages     = {436--441},
+  year      = {2015},
+  doi       = {10.1073/pnas.1407302112},
+}
+
+@article{running2004continuous,
+  author    = {Running, Steven W. and Nemani, Ramakrishna R. and Heinsch, Faith Ann and
+               Zhao, Maosheng and Reeves, Matt and Hashimoto, Hirofumi},
+  title     = {A continuous satellite-derived measure of global terrestrial primary
+               production},
+  journal   = {BioScience},
+  volume    = {54},
+  number    = {6},
+  pages     = {547--560},
+  year      = {2004},
+  doi       = {10.1641/0006-3568(2004)054[0547:ACSMOG]2.0.CO;2},
+}
+
+% ============================================================
+% EDDY COVARIANCE / GAP-FILLING METHODS
+% ============================================================
+
+@article{reichstein2005separation,
+  author    = {Reichstein, Markus and Falge, Eva and Baldocchi, Dennis and Papale,
+               Dario and Aubinet, Marc and Berbigier, Paul and Bernhofer, Christian
+               and Buchmann, Nina and Gilmanov, Tagir and Granier, Andr{\'e} and others},
+  title     = {On the separation of net ecosystem exchange into assimilation and
+               ecosystem respiration: review and improved algorithm},
+  journal   = {Global Change Biology},
+  volume    = {11},
+  number    = {9},
+  pages     = {1424--1439},
+  year      = {2005},
+  doi       = {10.1111/j.1365-2486.2005.001002.x},
+}
+
+@article{falge2001gap,
+  author    = {Falge, Eva and Baldocchi, Dennis and Olson, Richard and Anthoni,
+               Peter and Aubinet, Marc and Bernhofer, Christian and Burba, George
+               and Ceulemans, Reinhart and Clement, Robert and Dolman, Han and others},
+  title     = {Gap filling strategies for defensible annual sums of net ecosystem exchange},
+  journal   = {Agricultural and Forest Meteorology},
+  volume    = {107},
+  number    = {1},
+  pages     = {43--69},
+  year      = {2001},
+  doi       = {10.1016/S0168-1923(00)00225-2},
+}
+
+@article{papale2006towards,
+  author    = {Papale, Dario and Reichstein, Markus and Aubinet, Marc and Canfora,
+               Eleonora and Bernhofer, Christian and Kutsch, Werner and Longdoz,
+               Bernard and Rambal, Serge and Valentini, Riccardo and Vesala, Timo
+               and Yakir, Dan},
+  title     = {Towards a standardized processing of {N}et {E}cosystem {E}xchange
+               measured with eddy covariance technique: algorithms and uncertainty
+               estimation},
+  journal   = {Biogeosciences},
+  volume    = {3},
+  number    = {4},
+  pages     = {571--583},
+  year      = {2006},
+  doi       = {10.5194/bg-3-571-2006},
+}
+
+% ============================================================
+% NEURAL NETWORKS FOR CARBON FLUX
+% ============================================================
+
+@article{dengel2013networks,
+  author    = {Dengel, Sigrid and Zona, Donatella and Sachs, Torsten and Aurela, Mika
+               and Jammet, Mathieu and Parmentier, Frans-Jan W. and Oechel, Walter
+               and Vesala, Timo},
+  title     = {Testing the applicability of neural networks as a gap-filling method
+               using {$\Delta$C$_{O_2}$} flux data from high latitude peatlands},
+  journal   = {Biogeosciences},
+  volume    = {10},
+  number    = {12},
+  pages     = {8185--8200},
+  year      = {2013},
+  doi       = {10.5194/bg-10-8185-2013},
+}
+
+% ============================================================
+% ECOSYSTEM / WETLAND CARBON SCIENCE
+% ============================================================
+
+@article{knox2019wetland,
+  author    = {Knox, Sara Helen and Matthes, Jaclyn Hatala and Sturtevant, Cove and
+               Oikawa, Patricia Y. and Verfaillie, Joseph and Baldocchi, Dennis},
+  title     = {Biophysical controls on interannual variability in ecosystem-scale
+               {CO$_2$} and {CH$_4$} exchange in a {C}alifornia rice paddy},
+  journal   = {Journal of Geophysical Research: Biogeosciences},
+  volume    = {121},
+  number    = {3},
+  pages     = {978--1001},
+  year      = {2016},
+  doi       = {10.1002/2015JG003247},
+}
+
+@article{zscheischler2014impact,
+  author    = {Zscheischler, Jakob and Reichstein, Markus and von Buttlar, Jan and
+               Mu, Maosheng and Randerson, James T. and Mahecha, Miguel D.},
+  title     = {Carbon cycle extremes during the 21st century in {CMIP5} models: future
+               evolution and attribution to climatic drivers},
+  journal   = {Geophysical Research Letters},
+  volume    = {41},
+  number    = {24},
+  pages     = {8853--8861},
+  year      = {2014},
+  doi       = {10.1002/2014GL062409},
+}
+
+% ============================================================
+% TRANSFER LEARNING — ADDITIONAL THEORY
+% ============================================================
+
+@inproceedings{yosinski2014transferable,
+  author    = {Yosinski, Jason and Clune, Jeff and Bengio, Yoshua and Lipson, Hod},
+  title     = {How transferable are features in deep neural networks?},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS 2014)},
+  volume    = {27},
+  year      = {2014},
+  url       = {https://proceedings.neurips.cc/paper/2014/hash/375c71349b295fbe2dcdca9206f20961-Abstract.html},
+}
+
+@article{ben2010theory,
+  author    = {Ben-David, Shai and Blitzer, John and Crammer, Koby and Kulesza, Alex
+               and Pereira, Fernando and Vaughan, Jennifer Wortman},
+  title     = {A theory of learning from different domains},
+  journal   = {Machine Learning},
+  volume    = {79},
+  number    = {1-2},
+  pages     = {151--175},
+  year      = {2010},
+  doi       = {10.1007/s10994-009-5152-4},
+}
+
+% ============================================================
+% PHYSICS-GUIDED AND GEOSCIENCE ML
+% ============================================================
+
+@article{karpatne2017theory,
+  author    = {Karpatne, Anuj and Atluri, Gowtham and Faghmous, James H. and
+               Steinbach, Michael and Banerjee, Arindam and Ganguly, Auroop and
+               Shekhar, Shashi and Samatova, Nagiza and Kumar, Vipin},
+  title     = {Theory-guided data science: A new paradigm for scientific discovery
+               from data},
+  journal   = {IEEE Transactions on Knowledge and Data Engineering},
+  volume    = {29},
+  number    = {10},
+  pages     = {2318--2331},
+  year      = {2017},
+  doi       = {10.1109/TKDE.2017.2720168},
+}
+
+
+% ============================================================
+% LANGUAGE MODELS / NLP FOUNDATION MODELS
+% ============================================================
+
+@inproceedings{devlin2019bert,
+  author    = {Devlin, Jacob and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
+  title     = {{BERT}: Pre-training of deep bidirectional transformers for language
+               understanding},
+  booktitle = {Proceedings of the 2019 Conference of the North {A}merican Chapter of the
+               Association for Computational Linguistics: Human Language Technologies},
+  pages     = {4171--4186},
+  year      = {2019},
+  doi       = {10.18653/v1/N19-1423},
+}
+
+@inproceedings{brown2020gpt3,
+  author    = {Brown, Tom and Mann, Benjamin and Ryder, Nick and Subbiah, Melanie and
+               Kaplan, Jared D and Dhariwal, Prafulla and Neelakantan, Arvind and
+               Shyam, Pranav and Sastry, Girish and Askell, Amanda and others},
+  title     = {Language models are few-shot learners},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS 2020)},
+  volume    = {33},
+  pages     = {1877--1901},
+  year      = {2020},
+  url       = {https://proceedings.neurips.cc/paper/2020/hash/1457c0d6bfcb4967418bfb8ac142f64a-Abstract.html},
+}
+
+@inproceedings{dosovitskiy2021image,
+  author    = {Dosovitskiy, Alexey and Beyer, Lucas and Kolesnikov, Alexander and
+               Weissenborn, Dirk and Zhai, Xiaohua and Unterthiner, Thomas and
+               Dehghani, Mostafa and Minderer, Matthias and Heigold, Georg and
+               Gelly, Sylvain and others},
+  title     = {An image is worth 16$\times$16 words: Transformers for image recognition
+               at scale},
+  booktitle = {International Conference on Learning Representations (ICLR 2021)},
+  year      = {2021},
+  url       = {https://openreview.net/forum?id=YicbFdNTTy},
+}
+
+@inproceedings{deng2009imagenet,
+  author    = {Deng, Jia and Dong, Wei and Socher, Richard and Li, Li-Jia and Li, Kai
+               and Fei-Fei, Li},
+  title     = {{ImageNet}: A large-scale hierarchical image database},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern
+               Recognition (CVPR 2009)},
+  pages     = {248--255},
+  year      = {2009},
+  doi       = {10.1109/CVPR.2009.5206848},
+}
+
+% ============================================================
+% TIME-SERIES TRANSFORMERS
+% ============================================================
+
+@inproceedings{zhou2021informer,
+  author    = {Zhou, Haoyi and Zhang, Shanghang and Peng, Jieqi and Zhang, Shuai and
+               Li, Jianxin and Xiong, Hui and Zhang, Wancai},
+  title     = {Informer: Beyond efficient transformer for long sequence time-series
+               forecasting},
+  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume    = {35},
+  pages     = {11106--11115},
+  year      = {2021},
+  doi       = {10.1609/aaai.v35i12.17325},
+}
+
+@inproceedings{wu2021autoformer,
+  author    = {Wu, Haixu and Xu, Jiehui and Wang, Jianmin and Long, Mingsheng},
+  title     = {Autoformer: Decomposition transformers with {A}uto-{C}orrelation for
+               long-term series forecasting},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS 2021)},
+  volume    = {34},
+  pages     = {22419--22430},
+  year      = {2021},
+  url       = {https://proceedings.neurips.cc/paper/2021/hash/bcc0d400288793e8bdcd7c19a8ac0c2b-Abstract.html},
+}
+
+@inproceedings{nie2023patchtst,
+  author    = {Nie, Yuqi and Nguyen, Nam H. and Sinthong, Phanwadee and Kalagnanam, Jayant},
+  title     = {A time series is worth 64 words: Long-term forecasting with transformers},
+  booktitle = {International Conference on Learning Representations (ICLR 2023)},
+  year      = {2023},
+  url       = {https://openreview.net/forum?id=Jbdc0vTOcol},
+}
+
+@misc{ansari2024chronos,
+  author    = {Ansari, Abdul Fatir and Stella, Lorenzo and Turkmen, Caner and Zhang,
+               Xiyuan and Mercado, Pedro and Shen, Huibin and Shchur, Oleksandr and
+               Rangapuram, Syama Sundar and de Bezerra, Sebastian Pineda and others},
+  title     = {Chronos: Learning the language of time series},
+  year      = {2024},
+  eprint    = {2403.07815},
+  archivePrefix = {arXiv},
+  url       = {https://arxiv.org/abs/2403.07815},
+}
+
+% ============================================================
+% UNCERTAINTY QUANTIFICATION
+% ============================================================
+
+@article{gneiting2007strictly,
+  author    = {Gneiting, Tilmann and Raftery, Adrian E.},
+  title     = {Strictly proper scoring rules, prediction, and estimation},
+  journal   = {Journal of the American Statistical Association},
+  volume    = {102},
+  number    = {477},
+  pages     = {359--378},
+  year      = {2007},
+  doi       = {10.1198/016214506000001437},
+}
+
+
+@inproceedings{lakshminarayanan2017simple,
+  author    = {Lakshminarayanan, Balaji and Pritzel, Alexander and Blundell, Charles},
+  title     = {Simple and scalable predictive uncertainty estimation using deep ensembles},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS 2017)},
+  volume    = {30},
+  year      = {2017},
+  url       = {https://proceedings.neurips.cc/paper/2017/hash/9ef2ed4b7fd2c810847ffa5fa85bce38-Abstract.html},
+}
+
+% ============================================================
+% ACTIVE LEARNING
+% ============================================================
+
+@misc{hestness2017deep,
+  author    = {Hestness, Joel and Narang, Sharan and Ardalani, Newsha and Diamos, Gregory
+               and Jun, Heewoo and Kianinejad, Hassan and Patwary, Md. Mostofa Ali and
+               Yang, Yang and Zhou, Yanqi},
+  title     = {Deep learning scaling is predictable, empirically},
+  year      = {2017},
+  eprint    = {1712.00409},
+  archivePrefix = {arXiv},
+  url       = {https://arxiv.org/abs/1712.00409},
+}
+
+
+% ============================================================
+% ENSEMBLE METHODS — ADDITIONAL
+% ============================================================
+
+@article{kuncheva2003measures,
+  author    = {Kuncheva, Ludmila I. and Whitaker, Christopher J.},
+  title     = {Measures of diversity in classifier ensembles and their relationship
+               with the ensemble accuracy},
+  journal   = {Machine Learning},
+  volume    = {51},
+  number    = {2},
+  pages     = {181--207},
+  year      = {2003},
+  doi       = {10.1023/A:1022859003006},
+}
+
+@article{breiman1996bagging,
+  author    = {Breiman, Leo},
+  title     = {Bagging predictors},
+  journal   = {Machine Learning},
+  volume    = {24},
+  number    = {2},
+  pages     = {123--140},
+  year      = {1996},
+  doi       = {10.1007/BF00058655},
+}
+
+% ============================================================
+% TIME-SERIES FOUNDATION MODEL SURVEYS AND RELATED MODELS
+% ============================================================
+
+@inproceedings{liang2024foundation,
+  author    = {Liang, Yuxuan and Wen, Haomin and Nie, Yuqi and Jiang, Yushan and
+               Jin, Ming and Song, Dongjin and Pan, Shirui and Wen, Qingsong},
+  title     = {Foundation models for time series analysis: {A} tutorial and survey},
+  booktitle = {Proceedings of the 30th {ACM SIGKDD} Conference on Knowledge Discovery
+               and Data Mining},
+  pages     = {6555--6565},
+  year      = {2024},
+  doi       = {10.1145/3637528.3671451},
+}
+
+@misc{ye2024empowering,
+  author    = {Ye, Jiexia and Yu, Yongzi and Zhang, Weiqi and Wang, Le and Li, Jia
+               and Tsung, Fugee},
+  title     = {Empowering time series analysis with foundation models: A comprehensive
+               survey},
+  year      = {2024},
+  eprint    = {2405.02358},
+  archivePrefix = {arXiv},
+  url       = {https://arxiv.org/abs/2405.02358},
+}
+
+@inproceedings{jin2024timellm,
+  author    = {Jin, Ming and Wang, Shiyu and Ma, Lintao and Chu, Zhixuan and
+               Zhang, James Y. and Shi, Xiaoming and Chen, Pin-Yu and Liang, Yuxuan
+               and Li, Yuan-Fang and Pan, Shirui and Wen, Qingsong},
+  title     = {{Time-LLM}: Time series forecasting by reprogramming large language models},
+  booktitle = {International Conference on Learning Representations (ICLR 2024)},
+  year      = {2024},
+  url       = {https://openreview.net/forum?id=Unb5CVPtae},
+}
+
+
+% ============================================================
+% ADDITIONAL CARBON AND CLIMATE REFERENCES
+% ============================================================
+
+
+@book{cohen1988statistical,
+  author    = {Cohen, Jacob},
+  title     = {Statistical Power Analysis for the Behavioral Sciences},
+  edition   = {2nd},
+  publisher = {Lawrence Erlbaum Associates},
+  year      = {1988},
+  address   = {Hillsdale, NJ},
+}
+
+% ============================================================
+% CARBON FLUX — META-LEARNING AND BENCHMARKS
+% ============================================================
+
+@article{nathaniel2023metaflux,
+  author    = {Nathaniel, Juan and Liu, Jiangong and Gentine, Pierre},
+  title     = {{MetaFlux}: Meta-learning global carbon fluxes from sparse
+               spatiotemporal observations},
+  journal   = {Scientific Data},
+  volume    = {10},
+  number    = {1},
+  pages     = {440},
+  year      = {2023},
+  doi       = {10.1038/s41597-023-02349-y},
+}
+
+@inproceedings{fortier2025carbonsense,
+  author    = {Fortier, Matthew and Richter, Mats L. and Sonnentag, Oliver and Pal, Chris},
+  title     = {{CarbonSense}: A Multimodal Dataset and Baseline for Carbon Flux Modelling},
+  booktitle = {International Conference on Learning Representations (ICLR 2025)},
+  year      = {2025},
+  url       = {https://arxiv.org/abs/2406.04940},
 }

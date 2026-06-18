@@ -101,20 +101,37 @@ between the terrestrial biosphere and the atmosphere and is a primary
 determinant of whether an ecosystem acts as a carbon sink or source.
 Reliable short-horizon NEE forecasts support carbon accounting, the design
 of monitoring networks, and the assimilation of flux data into Earth-system
-models. The FLUXNET2015 network of eddy-covariance towers~\cite{pastorello2020fluxnet}
+models. The FLUXNET2015 network of eddy-covariance towers~\cite{pastorello2020fluxnet2015}
 has enabled data-driven NEE modelling at scale, from regression-based
-upscaling~\cite{tramontana2016predicting} to global products~\cite{jung2020fluxcom}.
+upscaling~\cite{tramontana2016predicting} to global products~\cite{jung2020scaling}.
+
+The stakes are global. The terrestrial biosphere absorbs a large fraction of
+anthropogenic carbon-dioxide emissions, and the magnitude and stability of this
+land carbon sink remains one of the leading uncertainties in the global carbon
+budget~\cite{friedlingstein2023global}. Reducing that uncertainty depends on
+dense, well-characterised flux observations and on models that can forecast
+fluxes where towers are absent---making the cross-ecosystem behaviour of those
+models a question with consequences well beyond any single site.
 
 A persistent obstacle is \emph{transferability}. Flux towers are sparse and
 unevenly distributed across biomes, so any operational model must forecast
 sites and ecosystems it was not trained on. Classical transfer-learning
-theory~\cite{pan2010survey,zhuang2021comprehensive} predicts a penalty that
+theory~\cite{pan2010transfer,weiss2016transfer} predicts a penalty that
 grows with the distance between source and target domains: a model trained on
 wetlands should forecast an unseen \emph{wetland} better than an unseen
 \emph{forest}. Pretrained time-series foundation models~\cite{cao2024tempo}
 complicate this picture. Trained on large, heterogeneous corpora, their
 cross-domain transfer behaviour in the geosciences---and across ecosystem
 boundaries in particular---is essentially unstudied.
+
+This question sits at the intersection of two trends. Foundation models---large
+networks pretrained on broad data and adapted to many downstream
+tasks~\cite{bommasani2021foundation}---have reshaped language and vision, and
+time-series forecasting is the latest domain to follow. In parallel, deep
+learning has become central to data-driven Earth-system
+science~\cite{reichstein2019deep}. Whether the transfer behaviour that makes
+foundation models attractive in those settings carries over to the ecosystem
+boundaries of carbon-flux forecasting is precisely what we probe.
 
 This paper asks a single question: \emph{does a time-series foundation model
 obey the classical cross-ecosystem transfer penalty in NEE forecasting?}
@@ -157,42 +174,36 @@ backbone. We evaluate the publicly released 80M-parameter checkpoint. Our
 focus is not the architecture but its \emph{transfer behaviour} across
 ecosystem types, which prior work has not examined for carbon flux.
 
-TEMPO is one of a fast-growing family of time-series foundation models.
-Chronos~\cite{TODO_chronos} tokenises series and reuses a language-model
-backbone; TimesFM~\cite{TODO_timesfm} is a decoder-only forecaster pretrained
-on a large temporal corpus; Moirai~\cite{TODO_moirai} targets universal,
-any-frequency forecasting; and Lag-Llama~\cite{TODO_lagllama} is an
-open probabilistic foundation model for time series. These share the
-pretrain-once, forecast-anywhere premise we test here; we evaluate TEMPO as a
-representative instance and leave a multi-model comparison to future work.
-% NOTE (item 6): the four citations above are PLACEHOLDERS (\cite{TODO_*}) and
-% are NOT yet in references.bib. Paul to confirm he has read each and add a
-% verified entry himself. Candidate papers:
-%   TODO_chronos  -- Ansari et al., "Chronos: Learning the Language of Time
-%                    Series," TMLR 2024 (arXiv:2403.07815).
-%   TODO_timesfm  -- Das et al., "A decoder-only foundation model for
-%                    time-series forecasting," ICML 2024 (arXiv:2310.10688).
-%   TODO_moirai   -- Woo et al., "Unified Training of Universal Time Series
-%                    Forecasting Transformers" (Moirai), ICML 2024
-%                    (arXiv:2402.02592).
-%   TODO_lagllama -- Rasul et al., "Lag-Llama: Towards Foundation Models for
-%                    Probabilistic Time Series Forecasting," 2023
-%                    (arXiv:2310.08278).
-% Keep total references <= 20 (currently 11 real entries + these 4 = 15 max).
+These models build on a line of specialised deep forecasters---notably
+patch-based transformers such as PatchTST~\cite{nie2023patchtst}, which first
+showed transformers competing on long-horizon forecasting---and generalise it
+by pretraining once across many series rather than fitting each task from
+scratch. TEMPO is one of a fast-growing family of such time-series foundation
+models. Chronos~\cite{ansari2024chronos} tokenises series and reuses a
+language-model
+backbone; TimesFM~\cite{das2024timesfm} is a decoder-only forecaster pretrained
+on a large temporal corpus; One Fits All~\cite{zhou2023one} adapts a frozen
+pretrained language-model backbone to time series; and
+Lag-Llama~\cite{rasul2024lag} is an open probabilistic foundation model for
+time series. These share the pretrain-once, forecast-anywhere premise we test
+here; we evaluate TEMPO as a representative instance and leave a multi-model
+comparison to future work.
 
 \paragraph{Machine learning for carbon flux.}
 Data-driven NEE modelling has a long lineage. Tramontana et
 al.~\cite{tramontana2016predicting} benchmark regression algorithms across
-global FLUXNET sites; FLUXCOM~\cite{jung2020fluxcom} upscales fluxes to the
+global FLUXNET sites; FLUXCOM~\cite{jung2020scaling} upscales fluxes to the
 globe; and partitioning methods~\cite{reichstein2005separation} underpin the
 NEE products themselves. Tree ensembles such as Random
 Forests~\cite{breiman2001random} and gradient boosting~\cite{chen2016xgboost}
 remain strong, widely used baselines, with recurrent
-networks~\cite{hochreiter1997lstm} capturing temporal structure.
+networks~\cite{hochreiter1997long} capturing temporal structure.
 
 \paragraph{Transfer learning.}
-The classical framing~\cite{pan2010survey,zhuang2021comprehensive} predicts
-that performance degrades as the source and target domains diverge, and warns
+The classical framing~\cite{pan2010transfer,weiss2016transfer} predicts
+that performance degrades as the source and target domains diverge; domain-adaptation
+theory makes this precise, bounding target error by source error plus a measure of
+divergence between the two domains~\cite{ben2010theory}, and the literature warns
 of \emph{negative transfer} when source data harm target performance. Our
 contribution is to show that a pretrained foundation model can violate the
 first prediction across ecosystem boundaries while the conventional baselines
@@ -241,11 +252,35 @@ while holding the training distribution fixed.
 \end{table}
 
 \subsection{Preprocessing}
-Half-hourly observations are aggregated to hourly resolution. A sliding
-window maps a 336-hour (two-week) lookback to a 96-hour forecast horizon.
-Features are $z$-scored per site using statistics computed within each split
-to prevent leakage. The wetland training pool yields $23{,}899$ forecast
-sequences.
+The FLUXNET2015 data are delivered through the ONEFlux pipeline, in which raw
+eddy-covariance fluxes are quality-controlled, $u_*$-filtered and gap-filled
+following standardised marginal-distribution-sampling
+methods~\cite{papale2006towards}; we use the resulting quality-flagged hourly
+product. Half-hourly observations are aggregated to hourly resolution, and a
+sliding window maps a 336-hour (two-week) lookback to a 96-hour forecast
+horizon. Features are $z$-scored per site using statistics computed within each
+split to prevent leakage. The wetland training pool yields $23{,}899$ forecast
+sequences. Figure~\ref{fig:neetimeseries} shows the NEE series across all seven
+sites, illustrating the contrast between the suppressed wetland fluxes and the
+forest's pronounced seasonal--diurnal cycle that the transfer analysis exploits.
+
+% Source: figures/nee_timeseries_all_sites.pdf
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/nee_timeseries_all_sites.pdf}
+  \caption{NEE time series for the five wetland training sites and the two
+  held-out test sites (UK-AMo wetland, SE-Htm forest).}
+  \label{fig:neetimeseries}
+\end{figure}
+
+\paragraph{Covariates.}
+% Source: scripts/active_learning_analysis.py (FEATURE_NAMES, 19 features/timestep)
+The multivariate baselines receive $19$ covariates per timestep: seven
+meteorological drivers (incoming shortwave and longwave radiation, vapour-pressure
+deficit, air temperature, air pressure, precipitation and wind speed), three
+surface energy fluxes (ground, latent and sensible heat), seven MODIS satellite
+reflectance bands, and two temporal encodings (day-of-year and time-of-day).
+TEMPO receives none of these---only the univariate NEE history.
 
 \subsection{Models}
 We compare five forecasters under identical windowing:
@@ -446,6 +481,30 @@ prior forecasts well and the suppressed, out-of-distribution signal it does not.
   photosynthetic day--night cycle; the wetland's flux is suppressed and
   irregular, consistent with the alignment mechanism for the inverted penalty.}
   \label{fig:diurnal}
+\end{figure}
+
+\subsection{Error structure}
+\label{sec:errorstructure}
+% Source: figures/error_analysis/error_by_hour_{SE-Htm,UK-AMo}.pdf
+Resolving forecast error by hour of day sharpens the mechanism
+(Figure~\ref{fig:errorhour}). On the forest site the error follows a clean,
+regular diurnal profile that mirrors the photosynthetic cycle---exactly the
+periodic structure the pretrained model represents well---so the foundation
+model tracks it with low, predictable error throughout the day. On the wetland
+site the hourly error is flatter and noisier, lacking the strong diurnal
+signature, consistent with a suppressed and irregular flux that is harder to
+anticipate from a generic temporal prior. The contrast in error structure thus
+echoes the alignment argument: the forest's regularity is what the model
+exploits, not merely the magnitude of its flux.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.49\columnwidth]{figures/error_by_hour_SE-Htm.pdf}\hfill
+  \includegraphics[width=0.49\columnwidth]{figures/error_by_hour_UK-AMo.pdf}
+  \caption{Forecast error by hour of day for the forest site (SE-Htm, left) and
+  the wetland site (UK-AMo, right). The forest shows a regular diurnal error
+  pattern; the wetland error is flatter and less structured.}
+  \label{fig:errorhour}
 \end{figure}
 
 \subsection{Negative transfer across configurations}
