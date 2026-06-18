@@ -268,6 +268,10 @@ forest's pronounced seasonal--diurnal cycle that the transfer analysis exploits.
 \begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{figures/nee_timeseries_all_sites.pdf}
+  \Description{Seven stacked line plots, one per site, showing the half-hourly
+  NEE trace over each site's measurement period. The wetland traces hover near
+  zero with small fluctuations, while the forest trace swings widely between
+  daytime carbon uptake and night-time release.}
   \caption{NEE time series for the five wetland training sites and the two
   held-out test sites (UK-AMo wetland, SE-Htm forest).}
   \label{fig:neetimeseries}
@@ -362,6 +366,11 @@ significant at $p<0.001$.
 \begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{figures/all_models_comparison.pdf}
+  \Description{Grouped bar charts of RMSE, MAE and R-squared for each model at
+  each site. On the wetland site the baseline bars sit close to the TEMPO bars,
+  but on the forest site the baseline R-squared bars are much shorter than the
+  TEMPO bars and their error bars much taller, showing the baselines collapse
+  while TEMPO stays accurate.}
   \caption{Model comparison across the two held-out test sites. The baselines
   are competitive on the wetland site but collapse on the forest site, where
   both TEMPO variants remain strong.}
@@ -460,6 +469,10 @@ well-matched to what the model represents.
 \begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{figures/tempo_error_distributions.pdf}
+  \Description{Two panels of overlaid error-distribution histograms, one per
+  test site. The TEMPO histograms form a tall narrow peak centred on zero,
+  whereas the baseline histograms are lower, wider and heavy-tailed, indicating
+  larger and more frequent extreme errors.}
   \caption{Forecast error distributions for TEMPO on the held-out sites.
   Errors remain concentrated on the forest site, consistent with alignment
   between its regular diurnal cycle and the model's pretraining distribution.
@@ -478,6 +491,10 @@ prior forecasts well and the suppressed, out-of-distribution signal it does not.
 \begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{figures/diurnal_patterns_by_ecosystem.pdf}
+  \Description{Mean NEE plotted against hour of day for each ecosystem. The
+  forest curve traces a deep, smooth U-shape with strong daytime uptake and
+  night-time release, while the wetland curve stays nearly flat near zero with
+  only weak, irregular variation.}
   \caption{Mean diurnal NEE by ecosystem. The forest shows a strong, regular
   photosynthetic day--night cycle; the wetland's flux is suppressed and
   irregular, consistent with the alignment mechanism for the inverted penalty.}
@@ -502,6 +519,10 @@ exploits, not merely the magnitude of its flux.
   \centering
   \includegraphics[width=0.49\columnwidth]{figures/error_by_hour_SE-Htm.pdf}\hfill
   \includegraphics[width=0.49\columnwidth]{figures/error_by_hour_UK-AMo.pdf}
+  \Description{Two side-by-side panels of forecast error against hour of day.
+  The forest panel (left) shows a regular daily oscillation in error that
+  follows the day-night cycle; the wetland panel (right) shows a flatter, noisier
+  error with no clear diurnal shape.}
   \caption{Forecast error by hour of day for the forest site (SE-Htm, left) and
   the wetland site (UK-AMo, right). The forest shows a regular diurnal error
   pattern; the wetland error is flatter and less structured.}
@@ -533,6 +554,12 @@ matched-subsample protocol.
 \begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{figures/transfer_matrix_heatmap.png}
+  \Description{A three-panel heatmap, one panel per baseline (Random Forest,
+  XGBoost, LSTM), with rows for training-coverage and leave-one-site-out
+  configurations and columns for the two test sites, cells coloured by
+  R-squared. Forest-site columns are consistently darker (lower) than
+  wetland-site columns, and low-coverage cells are darkest, marking
+  negative-transfer cases.}
   % Source: results/transfer_learning/transfer_matrix.csv (RF 20%-coverage,
   % UK-AMo R2=-0.163); negative_transfer_summary.csv
   \caption{Transfer matrix for the three baselines (Random Forest, XGBoost,
@@ -565,6 +592,11 @@ across horizons, while same-ecosystem wetland performance is a closer contest.
 \begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{figures/model_comparison_by_horizon.png}
+  \Description{Line plots of R-squared against forecast horizon from 1 to 96
+  hours, one line per model, separated by site. On the forest site both TEMPO
+  lines stay high and nearly flat while the baseline lines start low and decline;
+  on the wetland site TEMPO leads at short horizons but the Random Forest line
+  catches up to it by the longest horizon.}
   \caption{$R^2$ versus forecast horizon ($1$--$96$\,h). On the forest site
   (SE-Htm) both TEMPO variants dominate at all horizons; on the wetland site
   (UK-AMo) TEMPO leads early while Random Forest catches up by $96$\,h.}
