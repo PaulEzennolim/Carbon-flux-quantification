@@ -274,13 +274,14 @@ forest's pronounced seasonal--diurnal cycle that the transfer analysis exploits.
 \end{figure}
 
 \paragraph{Covariates.}
-% Source: scripts/active_learning_analysis.py (FEATURE_NAMES, 19 features/timestep)
-The multivariate baselines receive $19$ covariates per timestep: seven
-meteorological drivers (incoming shortwave and longwave radiation, vapour-pressure
-deficit, air temperature, air pressure, precipitation and wind speed), three
-surface energy fluxes (ground, latent and sensible heat), seven MODIS satellite
-reflectance bands, and two temporal encodings (day-of-year and time-of-day).
-TEMPO receives none of these---only the univariate NEE history.
+% Source: scripts/tempo_data_prep.py (meteorological_vars [10], modis_bands [7],
+% temporal_features [2] = 19 covariates/timestep)
+The multivariate baselines receive $19$ covariates per timestep, in three
+groups: ten meteorological and surface-energy variables (incoming shortwave and
+longwave radiation, vapour-pressure deficit, air temperature, air pressure,
+precipitation, wind speed, and the ground, latent and sensible heat fluxes),
+seven MODIS satellite reflectance bands, and two temporal encodings (day-of-year
+and time-of-day). TEMPO receives none of these---only the univariate NEE history.
 
 \subsection{Models}
 We compare five forecasters under identical windowing:
