@@ -15,20 +15,7 @@
 
 % \documentclass[manuscript]{acmart}  % single-column review format -- use if CFP requires single-column
 \documentclass[sigconf]{acmart}
-
-% --- conference metadata (placeholder until the CFP specifics are confirmed) ---
-\settopmatter{printacmref=false}        % drop the ACM reference block for a draft
-\setcopyright{none}
-\acmConference[AI4Science 2026]{Workshop on AI for Science}{2026}{}
-\acmYear{2026}
-\acmISBN{}
-\acmDOI{}
-\renewcommand\footnotetextcopyrightpermission[1]{} % suppress copyright footer in draft
-
-\usepackage{booktabs}
-\usepackage{graphicx}
-\usepackage{amsmath}
-\usepackage{multirow}
+\input{preamble}
 
 \begin{document}
 
@@ -143,21 +130,20 @@ when transferring from a wetland to a forest, whereas the foundation model
 
 \noindent\textbf{Contributions.}
 \begin{itemize}
-  \item \textbf{The inverted transfer penalty.} We document that fine-tuned
-        TEMPO forecasts the cross-ecosystem forest site ($R^2=0.728$) better
-        than the same-ecosystem wetland site ($R^2=0.599$), a $-21.5\%$
-        penalty, while three conventional baselines degrade by $37$--$54\%$
-        across the identical boundary.
-  \item \textbf{A baseline-versus-foundation contrast of negative transfer.}
-        Across coverage and leave-one-site-out configurations, $33$ of $60$
-        baseline model--configuration--site combinations ($55\%$) exhibit
-        negative transfer, isolating a failure mode the foundation model
-        avoids.
-  \item \textbf{An honest mechanism and limitations.} We argue the inversion
-        reflects alignment between the forest's regular photosynthetic cycle
+  \item \textbf{The inverted transfer penalty.} We show that fine-tuned
+        TEMPO forecasts the cross-ecosystem forest site ($R^2 = 0.728$) better
+        than the same-ecosystem wetland site ($R^2 = 0.599$)---a $-21.5\%$
+        penalty---while three conventional baselines degrade by $37$--$54\%$
+        across this identical boundary.
+  \item \textbf{Baseline-versus-foundation contrast.} Across coverage and 
+        leave-one-site-out setups, $33$ of $60$ baseline configurations 
+        ($55\%$) exhibit negative transfer, isolating a failure mode that 
+        the foundation model avoids.
+  \item \textbf{Mechanism and limitations.} We attribute the inversion to
+        alignment between the forest's regular diurnal photosynthetic cycle
         and TEMPO's pretraining distribution, and we state plainly the
         information asymmetry (multivariate baselines vs.\ univariate TEMPO)
-        that bounds the claim.
+        that bounds this claim.
 \end{itemize}
 
 % =====================================================================
@@ -290,14 +276,14 @@ and time-of-day). TEMPO receives none of these---only the univariate NEE history
 \subsection{Models}
 We compare five forecasters under identical windowing:
 \begin{itemize}
-  \item \textbf{TEMPO (zero-shot)}: the pretrained 80M-parameter checkpoint
-        applied with no task training.
-  \item \textbf{TEMPO (fine-tuned)}: the same checkpoint fine-tuned on the
-        wetland pool (Adam, learning rate $10^{-4}$, batch size $32$, up to
-        $50$ epochs with early stopping, patience $10$).
-  \item \textbf{XGBoost} and \textbf{Random Forest}: gradient-boosted and
-        bagged tree ensembles ($200$ trees).
-  \item \textbf{LSTM}: a two-layer recurrent network ($\sim$221k parameters).
+  \item \textbf{TEMPO (zero-shot)}: The pretrained 80M-parameter checkpoint 
+        applied with no downstream task training.
+  \item \textbf{TEMPO (fine-tuned)}: The identical checkpoint adapted on the 
+        wetland pool via Adam (learning rate: $10^{-4}$; batch size: $32$; 
+        up to $50$ epochs with early stopping patience of $10$).
+  \item \textbf{XGBoost / Random Forest}: Gradient-boosted and bagged tree 
+        ensembles configured with $200$ trees.
+  \item \textbf{LSTM}: A two-layer recurrent network utilizing $\sim$221k parameters.
 \end{itemize}
 
 \paragraph{Information asymmetry (stated openly).}
@@ -379,17 +365,23 @@ significant at $p<0.001$.
 
 \subsection{The inverted transfer penalty}
 \label{sec:inversion}
-The headline result follows from contrasting each model's same-ecosystem
-performance (UK-AMo, wetland) with its cross-ecosystem performance (SE-Htm,
-forest). We define the transfer penalty as the relative drop in $R^2$ when
-moving from the wetland to the forest site,
+
+The headline result is obtained by comparing each model's performance in the
+same ecosystem (UK-AMo, wetland) with its performance in a different ecosystem
+(SE-Htm, forest). We define the transfer penalty as the relative reduction in
+$R^2$ when moving from the wetland to the forest site:
 \begin{equation}
-  \mathrm{penalty} = \frac{R^2_{\mathrm{wetland}}-R^2_{\mathrm{forest}}}{R^2_{\mathrm{wetland}}},
-  \label{eq:penalty}
+\mathrm{penalty}
+=
+\frac{R^2_{\mathrm{wetland}} - R^2_{\mathrm{forest}}}
+     {R^2_{\mathrm{wetland}}},
+\label{eq:penalty}
 \end{equation}
-so a positive value is the classically expected degradation and a negative
-value is an inversion. Table~\ref{tab:penalty} reports these values computed
-directly from the Section~\ref{sec:benchmark} benchmark.
+
+A positive value corresponds to the expected degradation in performance,
+whereas a negative value indicates an inversion. Table~\ref{tab:penalty}
+reports these values, computed directly from the benchmark described in
+Section~\ref{sec:benchmark}.
 
 % Source: results/metrics/all_models_summary.csv
 % Penalty = (R2_wetland - R2_forest)/R2_wetland, computed directly from the
@@ -712,14 +704,15 @@ We leave these extensions to future work.
 % =====================================================================
 
 Across contrasting FLUXNET ecosystems, conventional NEE forecasters pay the
-classical cross-ecosystem transfer penalty---degrading by $37$--$54\%$ in
-$R^2$ from a same-ecosystem wetland site to a cross-ecosystem forest
-site---whereas the pretrained TEMPO foundation model inverts it, forecasting
-the forest site ($R^2=0.728$) better than the wetland site ($R^2=0.599$).
-The result indicates that alignment with a foundation model's pretraining
-distribution can outweigh nominal ecosystem match. Future work will equalise
-model inputs through covariate conditioning and test the inversion across a
-wider range of ecosystems.
+classical cross-ecosystem transfer penalty, degrading by $37$--$54\%$ in
+$R^2$ performance when moving from a same-biome wetland site to a different 
+forest site. Conversely, the pretrained TEMPO foundation model completely 
+inverts this behavior, forecasting the forest target ($R^2=0.728$) with higher 
+accuracy than the wetland baseline ($R^2=0.599$). This finding indicates that 
+distributional alignment with a foundation model's pretraining corpus can 
+outweigh a nominal ecosystem match. Future work will equalize model inputs 
+via covariate conditioning and evaluate this inversion across a broader suite 
+of global biomes.
 
 % =====================================================================
 \begin{acks}

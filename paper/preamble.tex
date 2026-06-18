@@ -1,0 +1,38 @@
+%% =====================================================================
+%% AI4Science 2026 -- CONFIGURATION PREAMBLE (preamble.tex)
+%% =====================================================================
+
+% --- Core LaTeX Packages ---
+\usepackage{booktabs}     % For professional, high-quality table lines
+\usepackage{graphicx}     % For including figures and plots
+\usepackage{amsmath}      % For advanced math environments and formatting
+\usepackage{multirow}    % For multi-row cells inside tables
+\usepackage{microtype}   % Enhances line-breaking and stops narrow-column errors
+
+% --- Draft vs. Final Submission Configuration Toggle ---
+% Comment out the "DRAFT MODE" block and uncomment the "FINAL SUBMISSION MODE" 
+% block when you are ready to generate the camera-ready version for the conference.
+
+%% --- [BLOCK A] DRAFT MODE (Hides copyright & reference blocks to save space) ---
+\settopmatter{printacmref=false}        % Suppresses the ACM reference block
+\setcopyright{none}                     % Suppresses copyright statement
+\renewcommand\footnotetextcopyrightpermission[1]{} % Clears footer copyright info
+%% -------------------------------------------------------------------------------
+
+%% --- [BLOCK B] FINAL SUBMISSION MODE (Uncomment this before final upload) ------
+% At submission, replace \setcopyright{...}, \acmDOI and \acmISBN with the exact
+% commands supplied in ACM's rights-confirmation email. (Note: acmcopyright is
+% deprecated; acmlicensed is the current default.)
+% \settopmatter{printacmref=true}       % Restores mandatory ACM reference block
+% \setcopyright{acmlicensed}            % replace with the value from the ACM rights email
+%% -------------------------------------------------------------------------------
+
+% --- Metadata Settings ---
+\acmConference[AI4Science 2026]{Workshop on AI for Science}{2026}{}
+\acmYear{2026}
+\acmISBN{}
+\acmDOI{}
+
+% --- Hyphenation Customizations ---
+% Tells LaTeX exactly how to split words unique to your paper if they hit margins
+\hyphenation{wet-land eco-sys-tem fore-cast-ing}
