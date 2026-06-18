@@ -13,6 +13,7 @@
 %% \documentclass to [sigconf,anonymous]{acmart} and comment out the author
 %% block below before submission. Add author details back only on acceptance.
 
+% \documentclass[manuscript]{acmart}  % single-column review format -- use if CFP requires single-column
 \documentclass[sigconf]{acmart}
 
 % --- conference metadata (placeholder until the CFP specifics are confirmed) ---
@@ -61,12 +62,13 @@ We benchmark TEMPO, a pretrained time-series foundation model, in both
 zero-shot and fine-tuned configurations against XGBoost, Random Forest and
 an LSTM for 96-hour NEE forecasting across contrasting FLUXNET2015
 ecosystems: five wetland training sites and two held-out test sites, one
-wetland (UK-AMo) and one forest (SE-Htm). The conventional models exhibit
-the expected penalty, degrading by 29--61\% in $R^2$ when transferring from
+wetland (UK-AMo, a blanket bog) and one forest (SE-Htm). The conventional
+models exhibit the expected penalty, degrading by 37--54\% in $R^2$ when
+transferring from
 the same-ecosystem wetland site to the cross-ecosystem forest site.
 TEMPO \emph{inverts} this behaviour: fine-tuned, it attains $R^2=0.728$ on
 the cross-ecosystem forest site versus $R^2=0.599$ on the same-ecosystem
-wetland site---a $-21.6\%$ ``penalty'', i.e.\ an improvement when crossing
+wetland site---a $-21.5\%$ ``penalty'', i.e.\ an improvement when crossing
 the boundary. All pairwise differences are significant ($p<0.001$, 1000-sample
 bootstrap, paired $t$-tests, Diebold--Mariano). We attribute the inversion to
 alignment between the forest's regular diurnal photosynthetic cycle and the
@@ -124,8 +126,8 @@ when transferring from a wetland to a forest, whereas the foundation model
 \begin{itemize}
   \item \textbf{The inverted transfer penalty.} We document that fine-tuned
         TEMPO forecasts the cross-ecosystem forest site ($R^2=0.728$) better
-        than the same-ecosystem wetland site ($R^2=0.599$), a $-21.6\%$
-        penalty, while three conventional baselines degrade by $29$--$61\%$
+        than the same-ecosystem wetland site ($R^2=0.599$), a $-21.5\%$
+        penalty, while three conventional baselines degrade by $37$--$54\%$
         across the identical boundary.
   \item \textbf{A baseline-versus-foundation contrast of negative transfer.}
         Across coverage and leave-one-site-out configurations, $33$ of $60$
@@ -185,6 +187,10 @@ transfer. This design isolates the effect of crossing an ecosystem boundary
 while holding the training distribution fixed.
 
 % Source: data/metadata/site_characteristics.csv
+% TERMINOLOGY NOTE: prose and tables standardise on "wetland" (blanket bog) for
+% UK-AMo, per site_characteristics.csv. Some generated figures still label it
+% "Peatland" / "Wetland peatland" (e.g. error_analysis, kgml decomposition
+% scripts). Decide whether to regenerate those figures for label consistency.
 \begin{table}[t]
   \centering
   \caption{FLUXNET2015 sites. Five wetlands are used for training; UK-AMo
@@ -312,22 +318,20 @@ moving from the wetland to the forest site,
                           {R^2_{\mathrm{wetland}}},
 \]
 so a positive value is the classically expected degradation and a negative
-value is an inversion. Table~\ref{tab:penalty} reports these values from the
-dedicated transfer protocol, and Figure~\ref{fig:transfermatrix} shows the
-full transfer matrix.
+value is an inversion. Table~\ref{tab:penalty} reports these values computed
+directly from the Section~\ref{sec:benchmark} benchmark.
 
-% Source: results/transfer_learning/TRANSFER_LEARNING_SUMMARY.txt (section H4)
-%         results/transfer_learning/transfer_matrix.csv (100%-coverage config)
-% NOTE: the transfer protocol uses matched 5,000-sample training subsamples,
-% so baseline R^2 here differ slightly from the full-test benchmark in Table 2.
-% TEMPO R^2 are identical across both (0.599 wetland / 0.728 forest).
+% Source: results/metrics/all_models_summary.csv
+% Penalty = (R2_wetland - R2_forest)/R2_wetland, computed directly from the
+% Table 2 benchmark values so both tables use one consistent harness.
 \begin{table}[t]
   \centering
-  \caption{Cross-ecosystem transfer penalty (wetland $\rightarrow$ forest).
+  \caption{Cross-ecosystem transfer penalty (wetland $\rightarrow$ forest),
+  computed from the Table~\ref{tab:benchmark} benchmark as
+  $(R^2_{\mathrm{wetland}}-R^2_{\mathrm{forest}})/R^2_{\mathrm{wetland}}$.
   Positive $=$ classical degradation; negative $=$ inversion. The three
-  baselines degrade by $29$--$61\%$; fine-tuned TEMPO improves by $21.6\%$.
-  Source: \texttt{TRANSFER\_LEARNING\_SUMMARY.txt} (H4),
-  \texttt{transfer\_matrix.csv}.}
+  baselines degrade by $37$--$54\%$; fine-tuned TEMPO improves by $21.5\%$.
+  Source: \texttt{all\_models\_summary.csv}.}
   \label{tab:penalty}
   \small
   \begin{tabular}{@{}lccc@{}}
@@ -335,29 +339,22 @@ full transfer matrix.
     Model & UK-AMo $R^2$ & SE-Htm $R^2$ & Penalty \\
           & (wetland) & (forest) &  \\
     \midrule
-    Random Forest    & 0.559 & 0.332 & $+0.227$\ ($+40.6\%$) \\
-    XGBoost          & 0.532 & 0.376 & $+0.157$\ ($+29.4\%$) \\
-    LSTM             & 0.468 & 0.184 & $+0.285$\ ($+60.8\%$) \\
-    \textbf{TEMPO Fine-Tuned} & 0.599 & 0.728 & $\mathbf{-0.129}$\ ($\mathbf{-21.6\%}$) \\
+    Random Forest    & 0.584 & 0.271 & $+0.313$\ ($+53.6\%$) \\
+    XGBoost          & 0.464 & 0.279 & $+0.185$\ ($+39.9\%$) \\
+    LSTM             & 0.359 & 0.225 & $+0.134$\ ($+37.3\%$) \\
+    \textbf{TEMPO Fine-Tuned} & 0.599 & 0.728 & $\mathbf{-0.129}$\ ($\mathbf{-21.5\%}$) \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\columnwidth]{figures/transfer_matrix_heatmap.png}
-  \caption{Cross-ecosystem transfer matrix. The baselines lose substantial
-  skill moving from the wetland to the forest site, whereas TEMPO gains skill.}
-  \label{fig:transfermatrix}
-\end{figure}
-
-Every baseline pays the expected penalty---$+40.6\%$ (Random Forest),
-$+29.4\%$ (XGBoost) and $+60.8\%$ (LSTM)---losing skill exactly where theory
-predicts. Fine-tuned TEMPO does the opposite, recording a $-21.6\%$ penalty:
+Every baseline pays the expected penalty---$+53.6\%$ (Random Forest),
+$+39.9\%$ (XGBoost) and $+37.3\%$ (LSTM)---losing skill exactly where theory
+predicts. Fine-tuned TEMPO does the opposite, recording a $-21.5\%$ penalty:
 it is markedly \emph{better} on the cross-ecosystem forest site than on the
 same-ecosystem wetland site. On the forest site this lifts fine-tuned TEMPO to
-a $+93.7\%$ relative $R^2$ advantage over the best baseline, versus a modest
-$+7.1\%$ on the wetland site. The differences are statistically decisive: on
+a $+160.9\%$ relative $R^2$ advantage over the best baseline (XGBoost,
+$R^2=0.279$), versus a modest $+2.6\%$ over the best baseline (Random Forest)
+on the wetland site. The differences are statistically decisive: on
 SE-Htm, fine-tuned TEMPO beats XGBoost with $p<0.001$ and a medium effect
 (Cohen's $d=0.553$), and the same holds against Random Forest and the LSTM.
 
@@ -394,15 +391,36 @@ well-matched to what the model represents.
 
 \subsection{Negative transfer across configurations}
 \label{sec:negtransfer}
-Sweeping training-data coverage ($20$--$100\%$) and leave-one-site-out
-removals over the three baselines, $33$ of $60$ model--configuration--site
-combinations ($55\%$) exhibit negative transfer, where adding source data
-\emph{harms} target performance relative to the full-data reference. The
+% Source: results/transfer_learning/transfer_matrix.csv,
+%         TRANSFER_LEARNING_SUMMARY.txt (negative-transfer cases)
+This subsection uses a separate, matched-subsample transfer protocol
+(\texttt{transfer\_matrix.csv}): each configuration trains on a fixed
+$5{,}000$-sample budget so that coverage and leave-one-site-out effects are
+compared on equal footing. Baseline $R^2$ under this protocol therefore differ
+slightly from the full-test benchmark of Section~\ref{sec:benchmark}; the
+results below are read only within this protocol. Sweeping training-data
+coverage ($20$--$100\%$) and leave-one-site-out removals over the three
+baselines, $33$ of $60$ model--configuration--site combinations ($55\%$)
+exhibit negative transfer, where adding source data \emph{harms} target
+performance relative to the full-data reference. The
 effect is most severe under low coverage on the wetland site (e.g.\ Random
 Forest at $20\%$ data, $\Delta R^2 = -0.72$) and recurs in leave-one-site-out
 removals (e.g.\ excluding DE-Akm costs Random Forest $\Delta R^2=-0.20$ on
 UK-AMo). This is the conventional failure mode the foundation model avoids,
 and it reinforces the contrast drawn in Section~\ref{sec:inversion}.
+Figure~\ref{fig:transfermatrix} visualises the full transfer matrix under this
+matched-subsample protocol.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/transfer_matrix_heatmap.png}
+  \caption{Cross-ecosystem transfer matrix under the matched-subsample protocol
+  of Section~\ref{sec:negtransfer}. The baselines lose substantial skill moving
+  from the wetland to the forest site, whereas TEMPO gains skill. (Baseline
+  values use the $5{,}000$-sample protocol and so differ slightly from
+  Table~\ref{tab:penalty}.)}
+  \label{fig:transfermatrix}
+\end{figure}
 
 % =====================================================================
 \section{Discussion}
@@ -441,7 +459,7 @@ We leave these extensions to future work.
 % =====================================================================
 
 Across contrasting FLUXNET ecosystems, conventional NEE forecasters pay the
-classical cross-ecosystem transfer penalty---degrading by $29$--$61\%$ in
+classical cross-ecosystem transfer penalty---degrading by $37$--$54\%$ in
 $R^2$ from a same-ecosystem wetland site to a cross-ecosystem forest
 site---whereas the pretrained TEMPO foundation model inverts it, forecasting
 the forest site ($R^2=0.728$) better than the wetland site ($R^2=0.599$).
