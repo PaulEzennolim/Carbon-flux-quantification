@@ -284,7 +284,7 @@ We compare five forecasters under identical windowing:
         up to $50$ epochs with early stopping patience of $10$).
   \item \textbf{XGBoost / Random Forest}: Gradient-boosted and bagged tree 
         ensembles configured with $200$ trees.
-  \item \textbf{LSTM}: A two-layer recurrent network utilizing $\sim$221k parameters.
+  \item \textbf{LSTM}: A two-layer recurrent network utilising $\sim$221k parameters.
 \end{itemize}
 
 \paragraph{Information asymmetry (stated openly).}
@@ -323,7 +323,7 @@ significant at $p<0.001$.
 %         results/analysis/statistical_summary.txt (95% bootstrap CIs on RMSE)
 \begin{table}[t]
   \centering
-  \caption{\bfseries\boldmath Primary 96-hour forecasting benchmark on the two held-out test
+  \caption{Primary 96-hour forecasting benchmark on the two held-out test
   sites. RMSE shown with 1000-sample bootstrap 95\% CI. Lower RMSE/MAE and
   higher $R^2$ are better. Source: \texttt{all\_models\_summary.csv},
   \texttt{statistical\_summary.txt}.}
@@ -389,7 +389,7 @@ Section~\ref{sec:benchmark}.
 % Table 2 benchmark values so both tables use one consistent harness.
 \begin{table}[t]
   \centering
-  \caption{\bfseries\boldmath Cross-ecosystem transfer penalty (wetland $\rightarrow$ forest),
+  \caption{Cross-ecosystem transfer penalty (wetland $\rightarrow$ forest),
   computed from the Table~\ref{tab:benchmark} benchmark as
   $(R^2_{\mathrm{wetland}}-R^2_{\mathrm{forest}})/R^2_{\mathrm{wetland}}$.
   Positive $=$ classical degradation; negative $=$ inversion. The three
@@ -555,7 +555,7 @@ matched-subsample protocol.
   negative-transfer cases.}
   % Source: results/transfer_learning/transfer_matrix.csv (RF 20%-coverage,
   % UK-AMo R2=-0.163); negative_transfer_summary.csv
-  \caption{\bfseries\boldmath Transfer matrix for the three baselines (Random Forest, XGBoost,
+  \caption{Transfer matrix for the three baselines (Random Forest, XGBoost,
   LSTM) under the matched-subsample protocol of Section~\ref{sec:negtransfer}.
   All three lose skill moving from the wetland to the forest site, and several
   cells show outright negative transfer, e.g.\ Random Forest at $20\%$
@@ -590,7 +590,7 @@ across horizons, while same-ecosystem wetland performance is a closer contest.
   lines stay high and nearly flat while the baseline lines start low and decline;
   on the wetland site TEMPO leads at short horizons but the Random Forest line
   catches up to it by the longest horizon.}
-  \caption{\bfseries\boldmath $R^2$ versus forecast horizon ($1$--$96$\,h). On the forest site
+  \caption{$R^2$ versus forecast horizon ($1$--$96$\,h). On the forest site
   (SE-Htm) both TEMPO variants dominate at all horizons; on the wetland site
   (UK-AMo) TEMPO leads early while Random Forest catches up by $96$\,h.}
   \label{fig:horizon}
@@ -611,7 +611,7 @@ advantage is substantive and not merely significant.
 
 \begin{table}[t]
   \centering
-  \caption{\bfseries\boldmath Fine-tuned TEMPO vs.\ each baseline: Cohen's $d$, paired $t$-test
+  \caption{Fine-tuned TEMPO vs.\ each baseline: Cohen's $d$, paired $t$-test
   $p$-value, and modified Diebold--Mariano statistic on $96$\,h errors.
   Source: \texttt{pairwise\_comparisons.csv}.}
   \label{tab:sig}
@@ -708,10 +708,10 @@ Across contrasting FLUXNET ecosystems, conventional NEE forecasters pay the
 classical cross-ecosystem transfer penalty, degrading by $37$--$54\%$ in
 $R^2$ performance when moving from a same-biome wetland site to a different 
 forest site. Conversely, the pretrained TEMPO foundation model completely 
-inverts this behavior, forecasting the forest target ($R^2=0.728$) with higher 
+inverts this behaviour, forecasting the forest target ($R^2=0.728$) with higher 
 accuracy than the wetland baseline ($R^2=0.599$). This finding indicates that 
 distributional alignment with a foundation model's pretraining corpus can 
-outweigh a nominal ecosystem match. Future work will equalize model inputs 
+outweigh a nominal ecosystem match. Future work will equalise model inputs 
 via covariate conditioning and evaluate this inversion across a broader suite 
 of global biomes.
 
