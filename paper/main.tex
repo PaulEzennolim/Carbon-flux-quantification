@@ -57,9 +57,9 @@ transferring from
 the same-ecosystem wetland site to the cross-ecosystem forest site.
 TEMPO \emph{inverts} this behaviour: fine-tuned, it attains $R^2=0.728$ on
 the cross-ecosystem forest site versus $R^2=0.599$ on the same-ecosystem
-wetland site---a $-21.5\%$ ``penalty'', i.e.\ an improvement when crossing
+wetland site, a $-21.5\%$ ``penalty'', i.e.\ an improvement when crossing
 the boundary. All pairwise differences are significant ($p<0.001$, 1000-sample
-bootstrap, paired $t$-tests, Diebold--Mariano). We attribute the inversion to
+bootstrap, paired $t$-tests, modified Diebold--Mariano). We attribute the inversion to
 alignment between the forest's regular diurnal photosynthetic cycle and the
 model's pretraining distribution, and we report the result honestly alongside
 its central limitation: the baselines use 19 covariates whereas TEMPO is
@@ -97,7 +97,7 @@ anthropogenic carbon-dioxide emissions, and the magnitude and stability of this
 land carbon sink remains one of the leading uncertainties in the global carbon
 budget~\cite{friedlingstein2023global}. Reducing that uncertainty depends on
 dense, well-characterised flux observations and on models that can forecast
-fluxes where towers are absent---making the cross-ecosystem behaviour of those
+fluxes where towers are absent, making the cross-ecosystem behaviour of those
 models a question with consequences well beyond any single site.
 
 A persistent obstacle is \emph{transferability}. Flux towers are sparse and
@@ -108,12 +108,12 @@ grows with the distance between source and target domains: a model trained on
 wetlands should forecast an unseen \emph{wetland} better than an unseen
 \emph{forest}. Pretrained time-series foundation models~\cite{cao2024tempo}
 complicate this picture. Trained on large, heterogeneous corpora, their
-cross-domain transfer behaviour in the geosciences---and across ecosystem
-boundaries in particular---is essentially unstudied.
+cross-domain transfer behaviour in the geosciences, and across ecosystem
+boundaries in particular, is essentially unstudied.
 
-This question sits at the intersection of two trends. Foundation models---large
+This question sits at the intersection of two trends. Foundation models, large
 networks pretrained on broad data and adapted to many downstream
-tasks~\cite{bommasani2021foundation}---have reshaped language and vision, and
+tasks~\cite{bommasani2021foundation}, have reshaped language and vision, and
 time-series forecasting is the latest domain to follow. In parallel, deep
 learning has become central to data-driven Earth-system
 science~\cite{reichstein2019deep}. Whether the transfer behaviour that makes
@@ -132,8 +132,8 @@ when transferring from a wetland to a forest, whereas the foundation model
 \begin{itemize}
   \item \textbf{The inverted transfer penalty.} We show that fine-tuned
         TEMPO forecasts the cross-ecosystem forest site ($R^2 = 0.728$) better
-        than the same-ecosystem wetland site ($R^2 = 0.599$)---a $-21.5\%$
-        penalty---while three conventional baselines degrade by $37$--$54\%$
+        than the same-ecosystem wetland site ($R^2 = 0.599$), a $-21.5\%$
+        penalty, while three conventional baselines degrade by $37$--$54\%$
         across this identical boundary.
   \item \textbf{Baseline-versus-foundation contrast.} Across coverage and 
         leave-one-site-out setups, $33$ of $60$ baseline configurations 
@@ -160,9 +160,9 @@ backbone. We evaluate the publicly released 80M-parameter checkpoint. Our
 focus is not the architecture but its \emph{transfer behaviour} across
 ecosystem types, which prior work has not examined for carbon flux.
 
-These models build on a line of specialised deep forecasters---notably
+These models build on a line of specialised deep forecasters, notably
 patch-based transformers such as PatchTST~\cite{nie2023patchtst}, which first
-showed transformers competing on long-horizon forecasting---and generalise it
+showed transformers competing on long-horizon forecasting, and generalise it
 by pretraining once across many series rather than fitting each task from
 scratch. TEMPO is one of a fast-growing family of such time-series foundation
 models. Chronos~\cite{ansari2024chronos} tokenises series and reuses a
@@ -193,7 +193,7 @@ divergence between the two domains~\cite{ben2010theory}, and the literature warn
 of \emph{negative transfer} when source data harm target performance. Our
 contribution is to show that a pretrained foundation model can violate the
 first prediction across ecosystem boundaries while the conventional baselines
-obey it---and to quantify the negative transfer the baselines suffer.
+obey it, and to quantify the negative transfer the baselines suffer.
 
 % =====================================================================
 \section{Data and Methods}
@@ -271,7 +271,7 @@ groups: ten meteorological and surface-energy variables (incoming shortwave and
 longwave radiation, vapour-pressure deficit, air temperature, air pressure,
 precipitation, wind speed, and the ground, latent and sensible heat fluxes),
 seven MODIS satellite reflectance bands, and two temporal encodings (day-of-year
-and time-of-day). TEMPO receives none of these---only the univariate NEE history.
+and time-of-day). TEMPO receives none of these, only the univariate NEE history.
 
 \subsection{Models}
 We compare five forecasters under identical windowing:
@@ -322,7 +322,7 @@ significant at $p<0.001$.
 %         results/analysis/statistical_summary.txt (95% bootstrap CIs on RMSE)
 \begin{table}[t]
   \centering
-  \caption{Primary 96-hour forecasting benchmark on the two held-out test
+  \caption{\bfseries\boldmath Primary 96-hour forecasting benchmark on the two held-out test
   sites. RMSE shown with 1000-sample bootstrap 95\% CI. Lower RMSE/MAE and
   higher $R^2$ are better. Source: \texttt{all\_models\_summary.csv},
   \texttt{statistical\_summary.txt}.}
@@ -388,7 +388,7 @@ Section~\ref{sec:benchmark}.
 % Table 2 benchmark values so both tables use one consistent harness.
 \begin{table}[t]
   \centering
-  \caption{Cross-ecosystem transfer penalty (wetland $\rightarrow$ forest),
+  \caption{\bfseries\boldmath Cross-ecosystem transfer penalty (wetland $\rightarrow$ forest),
   computed from the Table~\ref{tab:benchmark} benchmark as
   $(R^2_{\mathrm{wetland}}-R^2_{\mathrm{forest}})/R^2_{\mathrm{wetland}}$.
   Positive $=$ classical degradation; negative $=$ inversion. The three
@@ -409,8 +409,8 @@ Section~\ref{sec:benchmark}.
   \end{tabular}
 \end{table}
 
-Every baseline pays the expected penalty---$+53.6\%$ (Random Forest),
-$+39.9\%$ (XGBoost) and $+37.3\%$ (LSTM)---losing skill exactly where theory
+Every baseline pays the expected penalty, $+53.6\%$ (Random Forest),
+$+39.9\%$ (XGBoost) and $+37.3\%$ (LSTM), losing skill exactly where theory
 predicts. Fine-tuned TEMPO does the opposite, recording a $-21.5\%$ penalty:
 it is markedly \emph{better} on the cross-ecosystem forest site than on the
 same-ecosystem wetland site. On the forest site this lifts fine-tuned TEMPO to
@@ -427,7 +427,7 @@ SE-Htm, fine-tuned TEMPO beats XGBoost with $p<0.001$ and a medium effect
 The inversion is not an artefact of fine-tuning: it holds for \emph{both}
 TEMPO variants, and is in fact larger for the zero-shot model. Zero-shot TEMPO
 scores $R^2=0.384$ on the wetland site and $R^2=0.752$ on the forest site, a
-penalty of $(0.384-0.752)/0.384 = -95.8\%$---an even stronger inversion than
+penalty of $(0.384-0.752)/0.384 = -95.8\%$, an even stronger inversion than
 the fine-tuned model's $-21.5\%$. Fine-tuning on the wetland pool raises the
 wetland score ($0.384\rightarrow0.599$) but slightly lowers the forest score
 ($0.752\rightarrow0.728$). This trade-off is exactly what the alignment
@@ -443,7 +443,7 @@ distributions (Figure~\ref{fig:errordist}) show that the baselines develop
 heavy-tailed, biased errors on the forest site that they do not exhibit on the
 wetland site, whereas TEMPO's errors stay comparatively concentrated. We
 attribute this to distributional alignment with pretraining. The managed
-spruce forest has a strong, regular diurnal photosynthetic cycle---a clean,
+spruce forest has a strong, regular diurnal photosynthetic cycle, a clean,
 periodic signal of the kind that dominates the large generic corpora on which
 foundation models are pretrained. The wetlands, by contrast, exhibit
 suppressed and irregular flux driven by water-table and temperature dynamics,
@@ -476,7 +476,7 @@ well-matched to what the model represents.
 % Source: figures/diurnal_patterns_by_ecosystem.png (mean diurnal NEE by ecosystem)
 The mean diurnal cycles in Figure~\ref{fig:diurnal} make the alignment argument
 concrete: the forest exhibits a pronounced, regular day--night NEE oscillation,
-whereas the wetland's cycle is comparatively flat and irregular---precisely the
+whereas the wetland's cycle is comparatively flat and irregular, precisely the
 distinction between the in-distribution periodic signal a generic time-series
 prior forecasts well and the suppressed, out-of-distribution signal it does not.
 
@@ -498,8 +498,8 @@ prior forecasts well and the suppressed, out-of-distribution signal it does not.
 % Source: figures/error_analysis/error_by_hour_{SE-Htm,UK-AMo}.pdf
 Resolving forecast error by hour of day sharpens the mechanism
 (Figure~\ref{fig:errorhour}). On the forest site the error follows a clean,
-regular diurnal profile that mirrors the photosynthetic cycle---exactly the
-periodic structure the pretrained model represents well---so the foundation
+regular diurnal profile that mirrors the photosynthetic cycle, exactly the
+periodic structure the pretrained model represents well, so the foundation
 model tracks it with low, predictable error throughout the day. On the wetland
 site the hourly error is flatter and noisier, lacking the strong diurnal
 signature, consistent with a suppressed and irregular flux that is harder to
@@ -509,14 +509,14 @@ exploits, not merely the magnitude of its flux.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=0.49\columnwidth]{figures/error_by_hour_SE-Htm.pdf}\hfill
-  \includegraphics[width=0.49\columnwidth]{figures/error_by_hour_UK-AMo.pdf}
-  \Description{Two side-by-side panels of forecast error against hour of day.
-  The forest panel (left) shows a regular daily oscillation in error that
-  follows the day-night cycle; the wetland panel (right) shows a flatter, noisier
-  error with no clear diurnal shape.}
-  \caption{Forecast error by hour of day for the forest site (SE-Htm, left) and
-  the wetland site (UK-AMo, right). The forest shows a regular diurnal error
+  \includegraphics[width=0.95\columnwidth]{figures/error_by_hour_UK-AMo.pdf}
+  \\
+  \includegraphics[width=0.95\columnwidth]{figures/error_by_hour_SE-Htm.pdf}
+  \Description{Two vertically stacked panels of forecast error against hour of day.
+  The wetland panel (top) shows a flatter, noisier error with no clear diurnal shape; 
+  the forest panel (bottom) shows a regular daily oscillation in error that follows the day-night cycle.}
+  \caption{Forecast error by hour of day for the wetland site (UK-AMo, top) and
+  the forest site (SE-Htm, bottom). The forest shows a regular diurnal error
   pattern; the wetland error is flatter and less structured.}
   \label{fig:errorhour}
 \end{figure}
@@ -554,12 +554,12 @@ matched-subsample protocol.
   negative-transfer cases.}
   % Source: results/transfer_learning/transfer_matrix.csv (RF 20%-coverage,
   % UK-AMo R2=-0.163); negative_transfer_summary.csv
-  \caption{Transfer matrix for the three baselines (Random Forest, XGBoost,
+  \caption{\bfseries\boldmath Transfer matrix for the three baselines (Random Forest, XGBoost,
   LSTM) under the matched-subsample protocol of Section~\ref{sec:negtransfer}.
   All three lose skill moving from the wetland to the forest site, and several
-  cells show outright negative transfer---e.g.\ Random Forest at $20\%$
+  cells show outright negative transfer, e.g.\ Random Forest at $20\%$
   coverage reaches $R^2=-0.16$ on UK-AMo. Baseline values use the
-  $5{,}000$-sample protocol and so differ slightly from Table~\ref{tab:penalty}.}
+  $5{,}000$-sample protocol and so differ from Table~\ref{tab:penalty}.}
   \label{fig:transfermatrix}
 \end{figure}
 
@@ -572,7 +572,7 @@ It is not. Figure~\ref{fig:horizon} traces $R^2$ across the full $1$--$96$\,h
 horizon. On the forest site the foundation model's advantage is stable
 throughout: zero-shot TEMPO holds $R^2\approx0.86$ at $1$\,h and still
 $R^2=0.742$ at $96$\,h (fine-tuned: $0.886\rightarrow0.681$), while the
-baselines start low and decay---XGBoost $0.404\rightarrow0.175$, Random Forest
+baselines start low and decay, XGBoost $0.404\rightarrow0.175$, Random Forest
 $0.377\rightarrow0.197$, LSTM $0.338\rightarrow0.151$. The forest gap is
 therefore present at every horizon, not just early steps. We are candid about
 the wetland site, where the picture is mixed: fine-tuned TEMPO leads at short
@@ -589,7 +589,7 @@ across horizons, while same-ecosystem wetland performance is a closer contest.
   lines stay high and nearly flat while the baseline lines start low and decline;
   on the wetland site TEMPO leads at short horizons but the Random Forest line
   catches up to it by the longest horizon.}
-  \caption{$R^2$ versus forecast horizon ($1$--$96$\,h). On the forest site
+  \caption{\bfseries\boldmath $R^2$ versus forecast horizon ($1$--$96$\,h). On the forest site
   (SE-Htm) both TEMPO variants dominate at all horizons; on the wetland site
   (UK-AMo) TEMPO leads early while Random Forest catches up by $96$\,h.}
   \label{fig:horizon}
@@ -610,7 +610,7 @@ advantage is substantive and not merely significant.
 
 \begin{table}[t]
   \centering
-  \caption{Fine-tuned TEMPO vs.\ each baseline: Cohen's $d$, paired $t$-test
+  \caption{\bfseries\boldmath Fine-tuned TEMPO vs.\ each baseline: Cohen's $d$, paired $t$-test
   $p$-value, and modified Diebold--Mariano statistic on $96$\,h errors.
   Source: \texttt{pairwise\_comparisons.csv}.}
   \label{tab:sig}
