@@ -37,17 +37,19 @@ Defy Cross-Ecosystem Transfer Decay in Carbon-Flux Forecasting}
 
 %% ---- AUTHOR BLOCK (remove / anonymise for double-blind submission) ----
 \author{Paul Ezennolim}
+\authornote{Corresponding author.}
 \affiliation{%
   \institution{School of Computer Science, University of Sheffield}
   \city{Sheffield}
   \country{United Kingdom}}
-\email{paulezennolim@icloud.com}
+\email{tezennolim1@sheffield.ac.uk}
 
 \author{Po Yang}
 \affiliation{%
   \institution{School of Computer Science, University of Sheffield}
   \city{Sheffield}
   \country{United Kingdom}}
+\email{po.yang@sheffield.ac.uk}
 %% -----------------------------------------------------------------------
 
 \renewcommand{\shortauthors}{Ezennolim and Yang}
@@ -313,10 +315,10 @@ The headline result follows from contrasting each model's same-ecosystem
 performance (UK-AMo, wetland) with its cross-ecosystem performance (SE-Htm,
 forest). We define the transfer penalty as the relative drop in $R^2$ when
 moving from the wetland to the forest site,
-\[
-  \mathrm{penalty} = \frac{R^2_{\mathrm{wetland}}-R^2_{\mathrm{forest}}}
-                          {R^2_{\mathrm{wetland}}},
-\]
+\begin{equation}
+  \mathrm{penalty} = \frac{R^2_{\mathrm{wetland}}-R^2_{\mathrm{forest}}}{R^2_{\mathrm{wetland}}},
+  \label{eq:penalty}
+\end{equation}
 so a positive value is the classically expected degradation and a negative
 value is an inversion. Table~\ref{tab:penalty} reports these values computed
 directly from the Section~\ref{sec:benchmark} benchmark.
@@ -385,7 +387,9 @@ well-matched to what the model represents.
   \includegraphics[width=\columnwidth]{figures/tempo_error_distributions.pdf}
   \caption{Forecast error distributions for TEMPO on the held-out sites.
   Errors remain concentrated on the forest site, consistent with alignment
-  between its regular diurnal cycle and the model's pretraining distribution.}
+  between its regular diurnal cycle and the model's pretraining distribution.
+  Panels label UK-AMo as ``Peatland''; this is the blanket-bog wetland of
+  Table~\ref{tab:sites}.}
   \label{fig:errordist}
 \end{figure}
 
