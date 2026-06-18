@@ -157,6 +157,29 @@ backbone. We evaluate the publicly released 80M-parameter checkpoint. Our
 focus is not the architecture but its \emph{transfer behaviour} across
 ecosystem types, which prior work has not examined for carbon flux.
 
+TEMPO is one of a fast-growing family of time-series foundation models.
+Chronos~\cite{TODO_chronos} tokenises series and reuses a language-model
+backbone; TimesFM~\cite{TODO_timesfm} is a decoder-only forecaster pretrained
+on a large temporal corpus; Moirai~\cite{TODO_moirai} targets universal,
+any-frequency forecasting; and Lag-Llama~\cite{TODO_lagllama} is an
+open probabilistic foundation model for time series. These share the
+pretrain-once, forecast-anywhere premise we test here; we evaluate TEMPO as a
+representative instance and leave a multi-model comparison to future work.
+% NOTE (item 6): the four citations above are PLACEHOLDERS (\cite{TODO_*}) and
+% are NOT yet in references.bib. Paul to confirm he has read each and add a
+% verified entry himself. Candidate papers:
+%   TODO_chronos  -- Ansari et al., "Chronos: Learning the Language of Time
+%                    Series," TMLR 2024 (arXiv:2403.07815).
+%   TODO_timesfm  -- Das et al., "A decoder-only foundation model for
+%                    time-series forecasting," ICML 2024 (arXiv:2310.10688).
+%   TODO_moirai   -- Woo et al., "Unified Training of Universal Time Series
+%                    Forecasting Transformers" (Moirai), ICML 2024
+%                    (arXiv:2402.02592).
+%   TODO_lagllama -- Rasul et al., "Lag-Llama: Towards Foundation Models for
+%                    Probabilistic Time Series Forecasting," 2023
+%                    (arXiv:2310.08278).
+% Keep total references <= 20 (currently 11 real entries + these 4 = 15 max).
+
 \paragraph{Machine learning for carbon flux.}
 Data-driven NEE modelling has a long lineage. Tramontana et
 al.~\cite{tramontana2016predicting} benchmark regression algorithms across
@@ -360,6 +383,22 @@ on the wetland site. The differences are statistically decisive: on
 SE-Htm, fine-tuned TEMPO beats XGBoost with $p<0.001$ and a medium effect
 (Cohen's $d=0.553$), and the same holds against Random Forest and the LSTM.
 
+% Source: results/metrics/all_models_summary.csv
+% TEMPO Zero-Shot:  UK-AMo R2=0.3836, SE-Htm R2=0.7521
+% TEMPO Fine-Tuned: UK-AMo R2=0.5988, SE-Htm R2=0.7281
+% Zero-shot penalty = (0.384-0.752)/0.384 = -0.958 = -95.8%
+The inversion is not an artefact of fine-tuning: it holds for \emph{both}
+TEMPO variants, and is in fact larger for the zero-shot model. Zero-shot TEMPO
+scores $R^2=0.384$ on the wetland site and $R^2=0.752$ on the forest site, a
+penalty of $(0.384-0.752)/0.384 = -95.8\%$---an even stronger inversion than
+the fine-tuned model's $-21.5\%$. Fine-tuning on the wetland pool raises the
+wetland score ($0.384\rightarrow0.599$) but slightly lowers the forest score
+($0.752\rightarrow0.728$). This trade-off is exactly what the alignment
+mechanism (Section~\ref{sec:mechanism}) predicts: fine-tuning specialises the
+model toward the training biome, helping the in-domain wetland at a small cost
+to the out-of-domain forest, yet the forest still wins outright because the
+pretrained prior already aligns with its regular signal.
+
 \subsection{Mechanism}
 \label{sec:mechanism}
 Why does crossing the boundary \emph{help} the foundation model? The error
@@ -393,6 +432,22 @@ well-matched to what the model represents.
   \label{fig:errordist}
 \end{figure}
 
+% Source: figures/diurnal_patterns_by_ecosystem.png (mean diurnal NEE by ecosystem)
+The mean diurnal cycles in Figure~\ref{fig:diurnal} make the alignment argument
+concrete: the forest exhibits a pronounced, regular day--night NEE oscillation,
+whereas the wetland's cycle is comparatively flat and irregular---precisely the
+distinction between the in-distribution periodic signal a generic time-series
+prior forecasts well and the suppressed, out-of-distribution signal it does not.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/diurnal_patterns_by_ecosystem.pdf}
+  \caption{Mean diurnal NEE by ecosystem. The forest shows a strong, regular
+  photosynthetic day--night cycle; the wetland's flux is suppressed and
+  irregular, consistent with the alignment mechanism for the inverted penalty.}
+  \label{fig:diurnal}
+\end{figure}
+
 \subsection{Negative transfer across configurations}
 \label{sec:negtransfer}
 % Source: results/transfer_learning/transfer_matrix.csv,
@@ -418,13 +473,115 @@ matched-subsample protocol.
 \begin{figure}[t]
   \centering
   \includegraphics[width=\columnwidth]{figures/transfer_matrix_heatmap.png}
-  \caption{Cross-ecosystem transfer matrix under the matched-subsample protocol
-  of Section~\ref{sec:negtransfer}. The baselines lose substantial skill moving
-  from the wetland to the forest site, whereas TEMPO gains skill. (Baseline
-  values use the $5{,}000$-sample protocol and so differ slightly from
-  Table~\ref{tab:penalty}.)}
+  % Source: results/transfer_learning/transfer_matrix.csv (RF 20%-coverage,
+  % UK-AMo R2=-0.163); negative_transfer_summary.csv
+  \caption{Transfer matrix for the three baselines (Random Forest, XGBoost,
+  LSTM) under the matched-subsample protocol of Section~\ref{sec:negtransfer}.
+  All three lose skill moving from the wetland to the forest site, and several
+  cells show outright negative transfer---e.g.\ Random Forest at $20\%$
+  coverage reaches $R^2=-0.16$ on UK-AMo. Baseline values use the
+  $5{,}000$-sample protocol and so differ slightly from Table~\ref{tab:penalty}.}
   \label{fig:transfermatrix}
 \end{figure}
+
+\subsection{Forecast-horizon analysis}
+\label{sec:horizon}
+% Source: results/horizon_analysis/horizon_metrics.csv,
+%         HORIZON_ANALYSIS_SUMMARY.txt (R2 at key horizons)
+A natural objection is that the inversion might be a short-horizon artefact.
+It is not. Figure~\ref{fig:horizon} traces $R^2$ across the full $1$--$96$\,h
+horizon. On the forest site the foundation model's advantage is stable
+throughout: zero-shot TEMPO holds $R^2\approx0.86$ at $1$\,h and still
+$R^2=0.742$ at $96$\,h (fine-tuned: $0.886\rightarrow0.681$), while the
+baselines start low and decay---XGBoost $0.404\rightarrow0.175$, Random Forest
+$0.377\rightarrow0.197$, LSTM $0.338\rightarrow0.151$. The forest gap is
+therefore present at every horizon, not just early steps. We are candid about
+the wetland site, where the picture is mixed: fine-tuned TEMPO leads at short
+horizons ($R^2=0.879$ at $1$\,h) but degrades faster, so by the longest horizon
+Random Forest ($R^2=0.487$ at $96$\,h) edges fine-tuned TEMPO ($R^2=0.481$).
+The inversion is thus a robust property of the cross-ecosystem forest transfer
+across horizons, while same-ecosystem wetland performance is a closer contest.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/model_comparison_by_horizon.png}
+  \caption{$R^2$ versus forecast horizon ($1$--$96$\,h). On the forest site
+  (SE-Htm) both TEMPO variants dominate at all horizons; on the wetland site
+  (UK-AMo) TEMPO leads early while Random Forest catches up by $96$\,h.}
+  \label{fig:horizon}
+\end{figure}
+
+\subsection{Statistical significance}
+\label{sec:significance}
+% Source: results/analysis/pairwise_comparisons.csv
+% (cohens_d, p_value_ttest, dm_mdm_statistic for TEMPO Fine-Tuned vs each baseline)
+Table~\ref{tab:sig} summarises the pairwise tests of fine-tuned TEMPO against
+each baseline on both sites. Every difference is significant at $p<0.001$ under
+both a paired $t$-test and the modified Diebold--Mariano (mDM) test on $96$\,h
+forecast errors. The effect sizes are revealing: on the wetland site the
+effects are small (Cohen's $d$ from $0.14$ vs.\ Random Forest to $0.34$ vs.\
+XGBoost), reflecting the close contest there, whereas on the forest site all
+three are medium effects ($d=0.53$--$0.55$), confirming the cross-ecosystem
+advantage is substantive and not merely significant.
+
+\begin{table}[t]
+  \centering
+  \caption{Fine-tuned TEMPO vs.\ each baseline: Cohen's $d$, paired $t$-test
+  $p$-value, and modified Diebold--Mariano statistic on $96$\,h errors.
+  Source: \texttt{pairwise\_comparisons.csv}.}
+  \label{tab:sig}
+  \small
+  \begin{tabular}{@{}llccc@{}}
+    \toprule
+    Site & vs.\ baseline & Cohen's $d$ & $p$ & mDM \\
+    \midrule
+    \multirow{3}{*}{UK-AMo}
+      & Random Forest & 0.140 & $<0.001$ & $-6.50$ \\
+      & XGBoost       & 0.337 & $<0.001$ & $-41.66$ \\
+      & LSTM          & 0.259 & $<0.001$ & $-43.97$ \\
+    \midrule
+    \multirow{3}{*}{SE-Htm}
+      & XGBoost       & 0.553 & $<0.001$ & $-108.15$ \\
+      & Random Forest & 0.534 & $<0.001$ & $-105.31$ \\
+      & LSTM          & 0.553 & $<0.001$ & $-79.26$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Computational cost}
+\label{sec:cost}
+% Source: results/metrics/computational_costs.json,
+%         results/efficiency/efficiency_comparison.csv (baselines only;
+%         TEMPO was not profiled in this CPU harness)
+Table~\ref{tab:cost} reports the cost of the three baselines from the CPU
+efficiency benchmark. All three are cheap and real-time capable: training
+ranges from $0.09$\,h (XGBoost) to $1.11$\,h (LSTM), single-sample inference
+stays at $3$--$14$\,ms, and peak memory is at most $116$\,MB. The accuracy--cost
+trade-off is stark on the forest site, where these inexpensive models reach
+only $R^2\le0.28$ (Table~\ref{tab:benchmark}) while the $80$M-parameter
+foundation model exceeds $R^2=0.72$. TEMPO's own runtime was not measured in
+this CPU harness, so we do not report it; the comparison establishes that the
+baselines' speed advantage does not translate into competitive cross-ecosystem
+accuracy.
+
+\begin{table}[t]
+  \centering
+  \caption{Baseline computational cost from the CPU efficiency benchmark.
+  Train time, single-sample inference latency, and peak memory.
+  Source: \texttt{computational\_costs.json},
+  \texttt{efficiency\_comparison.csv}.}
+  \label{tab:cost}
+  \small
+  \begin{tabular}{@{}lccc@{}}
+    \toprule
+    Model & Train (h) & Infer (ms) & Peak mem (MB) \\
+    \midrule
+    Random Forest & 0.79 & 13.81 & 3.8 \\
+    XGBoost       & 0.09 & 3.19  & 0.7 \\
+    LSTM          & 1.11 & 6.75  & 116.0 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 % =====================================================================
 \section{Discussion}
