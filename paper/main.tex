@@ -168,10 +168,9 @@ scratch. TEMPO is one of a fast-growing family of such time-series foundation
 models. Chronos~\cite{ansari2024chronos} tokenises series and reuses a
 language-model
 backbone; TimesFM~\cite{das2024timesfm} is a decoder-only forecaster pretrained
-on a large temporal corpus; One Fits All~\cite{zhou2023one} adapts a frozen
-pretrained language-model backbone to time series; and
-Lag-Llama~\cite{rasul2024lag} is an open probabilistic foundation model for
-time series. These share the pretrain-once, forecast-anywhere premise we test
+on a large temporal corpus; and One Fits All~\cite{zhou2023one} adapts a frozen
+pretrained language-model backbone to time series. These share the
+pretrain-once, forecast-anywhere premise we test
 here; we evaluate TEMPO as a representative instance and leave a multi-model
 comparison to future work.
 
@@ -300,8 +299,8 @@ return to this point in the discussion.
 We report $R^2$, RMSE and MAE on the held-out test sites. Uncertainty is
 quantified with 1000-sample bootstrap 95\% confidence intervals; pairwise
 model differences are assessed with paired $t$-tests and the modified
-Diebold--Mariano test on 96-hour forecast errors, with Cohen's $d$ for effect
-size. All random seeds are fixed at $42$.
+Diebold--Mariano test~\cite{harvey1997testing} on 96-hour forecast errors, with
+Cohen's $d$ for effect size. All random seeds are fixed at $42$.
 
 % =====================================================================
 \section{Results}
