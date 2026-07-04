@@ -117,7 +117,7 @@ Cutting F3–F5 is deliberate: an 8-page paper with one sharp message beats a cr
 
 **Setup commands to start:**
 ```bash
-cd Carbon-flux-quatification
+cd Carbon-flux-quantification
 git checkout -b paper-ai4science      # work on a branch
 mkdir -p paper/figures
 # (then open Claude Code and paste the brief above)

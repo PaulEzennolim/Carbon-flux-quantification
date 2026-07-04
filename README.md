@@ -259,7 +259,7 @@ Random seed      : 42 (all experiments)
 ## Repository Structure
 
 ```text
-Carbon-flux-quatification/
+Carbon-flux-quantification/
 │
 ├── data/
 │   ├── raw/                      # Original FLUXNET2015 CSV files (not tracked by git)
@@ -321,8 +321,8 @@ Carbon-flux-quatification/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/PaulEzennolim/Carbon-flux-quatification.git
-cd Carbon-flux-quatification
+git clone https://github.com/PaulEzennolim/Carbon-flux-quantification.git
+cd Carbon-flux-quantification
 
 # 2. Create and activate conda environment
 conda create -n tempo python=3.10 -y
@@ -587,7 +587,7 @@ forecast accuracy is the primary objective and compute is not the bottleneck.
 
 ## Citation
 
-📄 **[Read the full dissertation (PDF)](https://github.com/PaulEzennolim/Carbon-flux-quatification/raw/main/Paul_Ezennolim_Dissertation.pdf)** &nbsp;<sub>*(Cmd/Ctrl + click to open in a new tab)*</sub>
+📄 **[Read the full dissertation (PDF)](https://github.com/PaulEzennolim/Carbon-flux-quantification/raw/main/Paul_Ezennolim_Dissertation.pdf)** &nbsp;<sub>*(Cmd/Ctrl + click to open in a new tab)*</sub>
 
 If you use this code or findings in your research, please cite:
 
@@ -599,7 +599,7 @@ If you use this code or findings in your research, please cite:
   year    = {2026},
   school  = {University of Sheffield},
   type    = {{BSc} Dissertation},
-  note    = {Code available at https://github.com/PaulEzennolim/Carbon-flux-quatification.git}
+  note    = {Code available at https://github.com/PaulEzennolim/Carbon-flux-quantification.git}
 }
 ```
 
