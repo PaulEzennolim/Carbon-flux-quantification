@@ -42,12 +42,15 @@ def do_transfer_matrix():
     csv = ROOT / "results" / "transfer_learning" / "transfer_matrix.csv"
     df = pd.read_csv(csv)
     fig = tl.plot_transfer_matrix(df)
-    out = tl.FIG_DIR / "transfer_matrix_heatmap.png"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(out, dpi=300, bbox_inches="tight")
+    out_png = tl.FIG_DIR / "transfer_matrix_heatmap.png"
+    out_pdf = tl.FIG_DIR / "transfer_matrix_heatmap.pdf"
+    out_png.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out_png, dpi=300, bbox_inches="tight")
+    fig.savefig(out_pdf, bbox_inches="tight")   # vector PDF (matplotlib pdf backend)
     plt.close(fig)
-    print(f"  saved {out.relative_to(ROOT)}")
-    _copy(out)
+    for out in (out_png, out_pdf):
+        print(f"  saved {out.relative_to(ROOT)}")
+        _copy(out)
 
 
 def do_horizon():
@@ -63,12 +66,15 @@ def do_horizon():
             for model, y_pred in data["preds"].items()
         }
     fig = hz.plot_model_comparison(all_metrics)
-    out = hz.FIG_DIR / "model_comparison_by_horizon.png"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(out, dpi=300, bbox_inches="tight")
+    out_png = hz.FIG_DIR / "model_comparison_by_horizon.png"
+    out_pdf = hz.FIG_DIR / "model_comparison_by_horizon.pdf"
+    out_png.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out_png, dpi=300, bbox_inches="tight")
+    fig.savefig(out_pdf, bbox_inches="tight")   # vector PDF (matplotlib pdf backend)
     plt.close(fig)
-    print(f"  saved {out.relative_to(ROOT)}")
-    _copy(out)
+    for out in (out_png, out_pdf):
+        print(f"  saved {out.relative_to(ROOT)}")
+        _copy(out)
 
 
 def do_error_by_hour():

@@ -9,11 +9,25 @@
 \usepackage{multirow}    % For multi-row cells inside tables
 \usepackage{microtype}   % Enhances line-breaking and stops narrow-column errors
 
+% --- Caption styling: ALL figure/table captions bold TEXT and bold MATH ---
+% acmart renders caption text in bold by default, but math ($...$) inside a
+% caption does not inherit that weight, so numbers/formulae (R^2, 37--54%, etc.)
+% print in normal weight. acmart already loads the caption package, so we declare
+% one bold+boldmath caption font and apply it globally to both figure and table
+% captions here -- in ONE place, so no per-\caption{} \bfseries/\boldmath prefixes
+% are needed anywhere.
+\DeclareCaptionFont{bfmath}{\bfseries\boldmath}
+\captionsetup{font=bfmath, labelfont=bfmath}
+
 % --- Draft vs. Final Submission Configuration Toggle ---
 % Comment out the "DRAFT MODE" block and uncomment the "FINAL SUBMISSION MODE" 
 % block when you are ready to generate the camera-ready version for the conference.
 
 %% --- [BLOCK A] DRAFT MODE (Hides copyright & reference blocks to save space) ---
+% KEEP printacmref=false until submission: the ACM reference block requires the
+% exact rights-form text from ACM's rights-confirmation email, which we do not
+% have during drafting. Enabling it now would print placeholder/incorrect rights
+% info. The acmart class warns about this by design; the warning is expected.
 \settopmatter{printacmref=false}        % Suppresses the ACM reference block
 \setcopyright{none}                     % Suppresses copyright statement
 \renewcommand\footnotetextcopyrightpermission[1]{} % Clears footer copyright info

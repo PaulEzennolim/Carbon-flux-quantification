@@ -132,21 +132,11 @@ when transferring from a wetland to a forest, whereas the foundation model
 
 \noindent\textbf{Contributions.}
 \begin{itemize}
-  \item \textbf{First empirical characterisation of cross-ecosystem transfer in a
-        time-series foundation model.} We present, to our knowledge, the first
-        systematic investigation of how a pretrained time-series foundation model
-        transfers across ecosystem boundaries for carbon-flux forecasting.
-  \item \textbf{Evidence of an inverted cross-ecosystem transfer penalty.} Contrary
-        to the expectation of classical transfer learning, we observe that the
-        pretrained foundation model achieves higher forecasting accuracy on a
-        cross-ecosystem forest than on a held-out wetland, while conventional
-        machine-learning baselines exhibit the expected degradation.
-  \item \textbf{Towards understanding transfer behaviour in foundation models.} We
-        analyse the observed inversion and provide evidence that alignment between
-        the target ecosystem dynamics and the model's pretraining distribution may
-        be a stronger determinant of transfer performance than ecosystem similarity
-        alone. We also explicitly discuss the principal limitations of the current
-        study and identify directions for future validation.
+    \item \textbf{First empirical characterisation of cross-ecosystem transfer in a time-series foundation model.} We present, to our knowledge, the first systematic investigation of how a pretrained time-series foundation model transfers across ecosystem boundaries for carbon-flux forecasting.
+    
+    \item \textbf{Evidence of an inverted cross-\allowbreak ecosystem transfer} to the expectation of classical transfer learning, we observe that the pretrained foundation model achieves higher forecasting accuracy on a cross-ecosystem forest than on a held-out wetland, while conventional machine-learning baselines exhibit the expected degradation.
+    
+    \item \textbf{Towards understanding transfer behaviour in foundation models.} We analyse the observed inversion and provide evidence that alignment between the target ecosystem dynamics and the model's pretraining distribution may be a stronger determinant of transfer performance than ecosystem similarity alone. We also explicitly discuss the principal limitations of the current study and identify directions for future validation.
 \end{itemize}
 
 % =====================================================================
@@ -328,8 +318,7 @@ significant at $p<0.001$.
   \centering
   \caption{Primary 96-hour forecasting benchmark on the two held-out test
   sites. RMSE shown with 1000-sample bootstrap 95\% CI. Lower RMSE/MAE and
-  higher $R^2$ are better. Source: \texttt{all\_models\_summary.csv},
-  \texttt{statistical\_summary.txt}.}
+  higher $R^2$ are better.}
   \label{tab:benchmark}
   \small
   \begin{tabular}{@{}llccc@{}}
@@ -396,8 +385,7 @@ Section~\ref{sec:benchmark}.
   computed from the Table~\ref{tab:benchmark} benchmark as
   $(R^2_{\mathrm{wetland}}-R^2_{\mathrm{forest}})/R^2_{\mathrm{wetland}}$.
   Positive $=$ classical degradation; negative $=$ inversion. The three
-  baselines degrade by $37$--$54\%$; fine-tuned TEMPO improves by $21.5\%$.
-  Source: \texttt{all\_models\_summary.csv}.}
+  baselines degrade by $37$--$54\%$; fine-tuned TEMPO improves by $21.5\%$.}
   \label{tab:penalty}
   \small
   \begin{tabular}{@{}lccc@{}}
@@ -542,7 +530,7 @@ their reported amplitudes are lower-bound estimates.
   NEE series (Welch periodogram; normalised spectral entropy, lower${}={}$more
   regular; peak-to-trough diurnal amplitude; absolute 24-h spectral power).
   Zero-shot TEMPO $R^2$ is available only for the two held-out test sites
-  (dash otherwise). Source: \texttt{results/analysis/signal\_regularity.csv}.}
+  (dash otherwise).}
   \label{tab:regularity}
   \Description{Table of seven flux sites listing spectral entropy, diurnal
   amplitude and absolute 24-hour spectral power computed from each site's NEE
@@ -633,7 +621,7 @@ matched-subsample protocol.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\columnwidth]{figures/transfer_matrix_heatmap.png}
+  \includegraphics[width=\columnwidth]{figures/transfer_matrix_heatmap.pdf}
   \Description{A three-panel heatmap, one panel per baseline (Random Forest,
   XGBoost, LSTM), with rows for training-coverage and leave-one-site-out
   configurations and columns for the two test sites, cells coloured by
@@ -671,7 +659,7 @@ across horizons, while same-ecosystem wetland performance is a closer contest.
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width=\columnwidth]{figures/model_comparison_by_horizon.png}
+  \includegraphics[width=\columnwidth]{figures/model_comparison_by_horizon.pdf}
   \Description{Line plots of R-squared against forecast horizon from 1 to 96
   hours, one line per model, separated by site. On the forest site both TEMPO
   lines stay high and nearly flat while the baseline lines start low and decline;
@@ -699,8 +687,7 @@ advantage is substantive and not merely significant.
 \begin{table}[t]
   \centering
   \caption{Fine-tuned TEMPO vs.\ each baseline: Cohen's $d$, paired $t$-test
-  $p$-value, and modified Diebold--Mariano statistic on $96$\,h errors.
-  Source: \texttt{pairwise\_comparisons.csv}.}
+  $p$-value, and modified Diebold--Mariano statistic on $96$\,h errors.}
   \label{tab:sig}
   \small
   \begin{tabular}{@{}llccc@{}}
@@ -739,9 +726,7 @@ accuracy.
 \begin{table}[t]
   \centering
   \caption{Baseline computational cost from the CPU efficiency benchmark.
-  Train time, single-sample inference latency, and peak memory.
-  Source: \texttt{computational\_costs.json},
-  \texttt{efficiency\_comparison.csv}.}
+  Train time, single-sample inference latency, and peak memory.}
   \label{tab:cost}
   \small
   \begin{tabular}{@{}lccc@{}}
