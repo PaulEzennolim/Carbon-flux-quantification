@@ -14,6 +14,9 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+from figure_style import apply_style, MODEL_COLORS, MODEL_ORDER
+apply_style()
+
 ROOT = Path(__file__).resolve().parent.parent
 CSV = ROOT / "results" / "metrics" / "all_models_summary.csv"
 FIG_DIR = ROOT / "figures"
@@ -24,14 +27,6 @@ SITE_INFO = {
     "UK-AMo": {"ecosystem": "Wetland"},   # corrected from "Peatland"
     "SE-Htm": {"ecosystem": "Forest"},
 }
-MODEL_COLORS = {
-    "Random Forest":    "#3498db",
-    "XGBoost":          "#2ecc71",
-    "LSTM":             "#e74c3c",
-    "TEMPO Zero-Shot":  "#f39c12",
-    "TEMPO Fine-Tuned": "#9b59b6",
-}
-MODEL_ORDER = list(MODEL_COLORS.keys())
 
 df = pd.read_csv(CSV)                       # columns: Model,Site,RMSE,MAE,R2
 df = df.rename(columns={"R2": "R²"})   # match notebook metric label
@@ -54,12 +49,12 @@ for row_idx, site in enumerate(SITES):
                 bars[i].set_linewidth(2)
         for bar, v in zip(bars, values):
             ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height(),
-                    f"{v:.3f}", ha="center", va="bottom", fontsize=8, fontweight="bold")
+                    f"{v:.3f}", ha="center", va="bottom", fontsize=9, fontweight="bold")
         short = [str(m).replace("TEMPO ", "T-").replace("Random Forest", "RF") for m in models]
         ax.set_xticks(range(len(models)))
-        ax.set_xticklabels(short, rotation=45, ha="right", fontsize=9)
-        ax.set_ylabel(metric, fontsize=11, fontweight="bold")
-        ax.set_title(f"{site} ({SITE_INFO[site]['ecosystem']})", fontsize=12, fontweight="bold")
+        ax.set_xticklabels(short, rotation=45, ha="right", fontsize=10)
+        ax.set_ylabel(metric, fontsize=12, fontweight="bold")
+        ax.set_title(f"{site} ({SITE_INFO[site]['ecosystem']})", fontsize=13, fontweight="bold")
         ax.grid(True, alpha=0.3, axis="y")
 
 plt.suptitle("Cross-Site Model Performance Comparison", fontsize=15, fontweight="bold", y=1.0)

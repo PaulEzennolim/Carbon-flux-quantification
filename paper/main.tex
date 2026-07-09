@@ -19,8 +19,8 @@
 
 \begin{document}
 
-\title{The Inverted Transfer Penalty: Time-Series Foundation Models
-Defy Cross-Ecosystem Transfer Decay in Carbon-Flux Forecasting}
+\title{Rethinking Cross-Ecosystem Transfer Learning: Evidence from a
+Time-Series Foundation Model for Carbon Flux Forecasting}
 
 %% ---- AUTHOR BLOCK (remove / anonymise for double-blind submission) ----
 \author{Paul Ezennolim}
@@ -47,11 +47,13 @@ climate modelling and carbon accounting, yet how forecasting models
 \emph{transfer across ecosystem boundaries} remains poorly understood.
 Classical transfer-learning theory predicts a penalty: a model trained on
 one biome should forecast a similar biome better than a dissimilar one.
-We benchmark TEMPO, a pretrained time-series foundation model, in both
-zero-shot and fine-tuned configurations against XGBoost, Random Forest and
-an LSTM for 96-hour NEE forecasting across contrasting FLUXNET2015
-ecosystems: five wetland training sites and two held-out test sites, one
-wetland (UK-AMo, a blanket bog) and one forest (SE-Htm). The conventional
+To investigate how such a model transfers across these boundaries, we compare
+TEMPO, a pretrained time-series foundation model, in both zero-shot and
+fine-tuned configurations with XGBoost, Random Forest and an LSTM for 96-hour
+NEE forecasting across contrasting FLUXNET2015 ecosystems: five wetland
+training sites and two held-out test sites, one wetland (UK-AMo, a blanket
+bog) and one forest (SE-Htm). The benchmark is our instrument, not our object:
+the aim is to characterise the transfer behaviour it reveals. The conventional
 models exhibit the expected penalty, degrading by 37--54\% in $R^2$ when
 transferring from
 the same-ecosystem wetland site to the cross-ecosystem forest site.
@@ -60,7 +62,7 @@ the cross-ecosystem forest site versus $R^2=0.599$ on the same-ecosystem
 wetland site, a $-21.5\%$ ``penalty'', i.e.\ an improvement when crossing
 the boundary. All pairwise differences are significant ($p<0.001$, 1000-sample
 bootstrap, paired $t$-tests, modified Diebold--Mariano). We attribute the inversion to
-alignment between the forest's regular diurnal photosynthetic cycle and the
+alignment between the forest's diurnal dynamics and the
 model's pretraining distribution, and we report the result honestly alongside
 its central limitation: the baselines use 19 covariates whereas TEMPO is
 univariate. The finding suggests that for foundation models, distributional
@@ -122,7 +124,7 @@ boundaries of carbon-flux forecasting is precisely what we probe.
 
 This paper asks a single question: \emph{does a time-series foundation model
 obey the classical cross-ecosystem transfer penalty in NEE forecasting?}
-We find that it does not. Benchmarking TEMPO against XGBoost, Random Forest
+We find that it does not. Investigating TEMPO alongside XGBoost, Random Forest
 and an LSTM on five wetland training sites and two contrasting held-out test
 sites, we observe that the conventional models pay the expected penalty
 when transferring from a wetland to a forest, whereas the foundation model
@@ -130,20 +132,21 @@ when transferring from a wetland to a forest, whereas the foundation model
 
 \noindent\textbf{Contributions.}
 \begin{itemize}
-  \item \textbf{The inverted transfer penalty.} We show that fine-tuned
-        TEMPO forecasts the cross-ecosystem forest site ($R^2 = 0.728$) better
-        than the same-ecosystem wetland site ($R^2 = 0.599$), a $-21.5\%$
-        penalty, while three conventional baselines degrade by $37$--$54\%$
-        across this identical boundary.
-  \item \textbf{Baseline-versus-foundation contrast.} Across coverage and 
-        leave-one-site-out setups, $33$ of $60$ baseline configurations 
-        ($55\%$) exhibit negative transfer, isolating a failure mode that 
-        the foundation model avoids.
-  \item \textbf{Mechanism and limitations.} We attribute the inversion to
-        alignment between the forest's regular diurnal photosynthetic cycle
-        and TEMPO's pretraining distribution, and we state plainly the
-        information asymmetry (multivariate baselines vs.\ univariate TEMPO)
-        that bounds this claim.
+  \item \textbf{First empirical characterisation of cross-ecosystem transfer in a
+        time-series foundation model.} We present, to our knowledge, the first
+        systematic investigation of how a pretrained time-series foundation model
+        transfers across ecosystem boundaries for carbon-flux forecasting.
+  \item \textbf{Evidence of an inverted cross-ecosystem transfer penalty.} Contrary
+        to the expectation of classical transfer learning, we observe that the
+        pretrained foundation model achieves higher forecasting accuracy on a
+        cross-ecosystem forest than on a held-out wetland, while conventional
+        machine-learning baselines exhibit the expected degradation.
+  \item \textbf{Towards understanding transfer behaviour in foundation models.} We
+        analyse the observed inversion and provide evidence that alignment between
+        the target ecosystem dynamics and the model's pretraining distribution may
+        be a stronger determinant of transfer performance than ecosystem similarity
+        alone. We also explicitly discuss the principal limitations of the current
+        study and identify directions for future validation.
 \end{itemize}
 
 % =====================================================================
@@ -250,9 +253,9 @@ sites, illustrating the contrast between the suppressed wetland fluxes and the
 forest's pronounced seasonal--diurnal cycle that the transfer analysis exploits.
 
 % Source: figures/nee_timeseries_all_sites.pdf
-\begin{figure}[t]
+\begin{figure*}[t]
   \centering
-  \includegraphics[width=\columnwidth]{figures/nee_timeseries_all_sites.pdf}
+  \includegraphics[width=0.85\textwidth]{figures/nee_timeseries_all_sites.pdf}
   \Description{Seven stacked line plots, one per site, showing the half-hourly
   NEE trace over each site's measurement period. The wetland traces hover near
   zero with small fluctuations, while the forest trace swings widely between
@@ -260,7 +263,7 @@ forest's pronounced seasonal--diurnal cycle that the transfer analysis exploits.
   \caption{NEE time series for the five wetland training sites and the two
   held-out test sites (UK-AMo wetland, SE-Htm forest).}
   \label{fig:neetimeseries}
-\end{figure}
+\end{figure*}
 
 \paragraph{Covariates.}
 % Source: scripts/tempo_data_prep.py (build order) and
@@ -435,7 +438,7 @@ wetland score ($0.384\rightarrow0.599$) but slightly lowers the forest score
 mechanism (Section~\ref{sec:mechanism}) predicts: fine-tuning specialises the
 model toward the training biome, helping the in-domain wetland at a small cost
 to the out-of-domain forest, yet the forest still wins outright because the
-pretrained prior already aligns with its regular signal.
+pretrained prior already aligns with its strong diurnal signal.
 
 \subsection{Mechanism}
 \label{sec:mechanism}
@@ -444,11 +447,16 @@ distributions (Figure~\ref{fig:errordist}) show that the baselines develop
 heavy-tailed, biased errors on the forest site that they do not exhibit on the
 wetland site, whereas TEMPO's errors stay comparatively concentrated. We
 attribute this to distributional alignment with pretraining. The managed
-spruce forest has a strong, regular diurnal photosynthetic cycle, a clean,
-periodic signal of the kind that dominates the large generic corpora on which
-foundation models are pretrained. The wetlands, by contrast, exhibit
-suppressed and irregular flux driven by water-table and temperature dynamics,
-which is comparatively out-of-distribution for a generic time-series prior.
+spruce forest has a large-amplitude diurnal photosynthetic cycle: a strong
+periodic signal that stands well clear of the noise floor, of the kind that
+dominates the large generic corpora on which foundation models are pretrained.
+The wetlands, by contrast, exhibit suppressed flux driven by water-table and
+temperature dynamics; their diurnal periodicity, though proportionally
+comparable, is small in magnitude and largely buried in noise, leaving a
+low-amplitude signal that is comparatively out-of-distribution for a generic
+time-series prior. We quantify these signal properties, and report where they
+do and do not track forecast skill, in Section~\ref{sec:quantmech}
+(Table~\ref{tab:regularity}).
 For TEMPO, then, alignment with the pretraining distribution appears to matter
 more than nominal ecosystem match; for the covariate-driven baselines, the
 forest's NEE dynamics are simply harder to fit from the available drivers.
@@ -468,18 +476,18 @@ well-matched to what the model represents.
   larger and more frequent extreme errors.}
   \caption{Forecast error distributions for TEMPO on the held-out sites.
   Errors remain concentrated on the forest site, consistent with alignment
-  between its regular diurnal cycle and the model's pretraining distribution.
-  Panels label UK-AMo as ``Peatland''; this is the blanket-bog wetland of
-  Table~\ref{tab:sites}.}
+  between its strong, large-amplitude diurnal cycle and the model's pretraining
+  distribution.}
   \label{fig:errordist}
 \end{figure}
 
 % Source: figures/diurnal_patterns_by_ecosystem.png (mean diurnal NEE by ecosystem)
 The mean diurnal cycles in Figure~\ref{fig:diurnal} make the alignment argument
-concrete: the forest exhibits a pronounced, regular day--night NEE oscillation,
-whereas the wetland's cycle is comparatively flat and irregular, precisely the
-distinction between the in-distribution periodic signal a generic time-series
-prior forecasts well and the suppressed, out-of-distribution signal it does not.
+concrete: the forest exhibits a pronounced, large-amplitude day--night NEE
+oscillation, whereas the wetland's cycle is comparatively flat and small in
+amplitude, precisely the distinction between the in-distribution periodic signal
+a generic time-series prior forecasts well and the suppressed, out-of-distribution
+signal it does not.
 
 \begin{figure}[t]
   \centering
@@ -488,11 +496,84 @@ prior forecasts well and the suppressed, out-of-distribution signal it does not.
   forest curve traces a deep, smooth U-shape with strong daytime uptake and
   night-time release, while the wetland curve stays nearly flat near zero with
   only weak, irregular variation.}
-  \caption{Mean diurnal NEE by ecosystem. The forest shows a strong, regular
-  photosynthetic day--night cycle; the wetland's flux is suppressed and
-  irregular, consistent with the alignment mechanism for the inverted penalty.}
+  \caption{Mean diurnal NEE by ecosystem. The forest shows a strong,
+  large-amplitude photosynthetic day--night cycle; the wetland's flux is
+  suppressed and low in amplitude, consistent with the alignment mechanism for
+  the inverted penalty.}
   \label{fig:diurnal}
 \end{figure}
+
+\subsection{Quantifying the mechanism: regularity and amplitude}
+\label{sec:quantmech}
+To test the alignment argument against objective evidence, we compute
+signal measures for each site directly from its hourly NEE series---the same
+target the models forecast. From each series we estimate the power spectrum with
+a Welch periodogram and derive a normalised spectral entropy (lower${}={}$more
+regular) and the lag-24\,h autocorrelation (higher${}={}$more diurnally
+repeatable); as magnitude-preserving measures we record the absolute spectral
+power in the 24-h band and the peak-to-trough amplitude of the mean diurnal
+cycle. Full method and per-site values are in
+\texttt{results/analysis/signal\_regularity.csv} and summarised in
+Table~\ref{tab:regularity}.
+
+The normalised, shape-based measures do \emph{not} explain the inversion. On the
+two held-out test sites the forest (SE-Htm) is not more regular than the wetland
+(UK-AMo): it has slightly \emph{higher} spectral entropy ($0.388$ vs.\ $0.370$)
+and \emph{lower} lag-24\,h autocorrelation ($0.838$ vs.\ $0.867$), yet is
+forecast far better (zero-shot $R^2=0.752$ vs.\ $0.384$). A ``more regular
+signal, better forecast'' account is therefore not supported by these data.
+
+The amplitude measures, by contrast, order the two sites as $R^2$ does. The
+forest's diurnal signal is several times larger than the wetland's---absolute
+24-h spectral power $25.9$ vs.\ $6.7$, and peak-to-trough diurnal amplitude
+$14.0$ vs.\ $6.5$ (Table~\ref{tab:regularity})---consistent with an amplitude /
+signal-to-noise reading of the mechanism rather than a regularity one.
+
+Three caveats bound this. First, per-site zero-shot $R^2$ is available for only
+the two test sites, so this is a two-site \emph{ordering}, not a correlation
+across sites. Second, amplitude is not strictly an ecosystem property: the
+wetland DE-Akm has the second-largest diurnal amplitude of the seven sites.
+Third, three sites (GL-ZaF, FR-LGt, DE-Akm) required substantial gap-filling, so
+their reported amplitudes are lower-bound estimates.
+
+\begin{table}[t]
+  \centering
+  \caption{Objective signal measures per site, computed from each site's hourly
+  NEE series (Welch periodogram; normalised spectral entropy, lower${}={}$more
+  regular; peak-to-trough diurnal amplitude; absolute 24-h spectral power).
+  Zero-shot TEMPO $R^2$ is available only for the two held-out test sites
+  (dash otherwise). Source: \texttt{results/analysis/signal\_regularity.csv}.}
+  \label{tab:regularity}
+  \Description{Table of seven flux sites listing spectral entropy, diurnal
+  amplitude and absolute 24-hour spectral power computed from each site's NEE
+  series. The forest site SE-Htm has the largest diurnal amplitude and 24-hour
+  power but not the lowest spectral entropy, and the wetland DE-Akm has the
+  second-largest amplitude. Zero-shot R-squared is shown only for the two test
+  sites, UK-AMo (0.384) and SE-Htm (0.752).}
+  \small
+  \setlength{\tabcolsep}{4.5pt}
+  \begin{tabular}{@{}llrrrr@{}}
+    \toprule
+    Site & Ecosystem & \shortstack[r]{Spec.\\entropy} &
+    \shortstack[r]{Diurnal\\amp.} & \shortstack[r]{Abs.\ 24-h\\power} &
+    \shortstack[r]{Zero-shot\\$R^2$} \\
+    \midrule
+    \multicolumn{6}{@{}l}{\emph{Training (wetland)}}\\
+    FI-Lom            & Wetland & $0.404$ & $3.5$  & $3.9$  & --- \\
+    GL-ZaF$^{\dagger}$ & Wetland & $0.373$ & $2.2$  & $2.0$  & --- \\
+    IE-Cra            & Wetland & $0.419$ & $4.5$  & $2.7$  & --- \\
+    DE-Akm$^{\dagger}$ & Wetland & $0.432$ & $11.0$ & $17.7$ & --- \\
+    FR-LGt$^{\dagger}$ & Wetland & $0.535$ & $3.5$  & $2.9$  & --- \\
+    \midrule
+    \multicolumn{6}{@{}l}{\emph{Test (held out)}}\\
+    UK-AMo            & Wetland & $0.370$ & $6.5$  & $6.7$  & $0.384$ \\
+    SE-Htm            & Forest  & $0.388$ & $14.0$ & $25.9$ & $0.752$ \\
+    \bottomrule
+  \end{tabular}
+  \par\smallskip
+  {\footnotesize $^{\dagger}$Substantial gap-filling ($19$--$28\%$ missing before
+  fill); reported diurnal amplitude and 24-h power are lower-bound estimates.}
+\end{table}
 
 \subsection{Error structure}
 \label{sec:errorstructure}
@@ -500,24 +581,30 @@ prior forecasts well and the suppressed, out-of-distribution signal it does not.
 Resolving forecast error by hour of day sharpens the mechanism
 (Figure~\ref{fig:errorhour}). On the forest site the error follows a clean,
 regular diurnal profile that mirrors the photosynthetic cycle, exactly the
-periodic structure the pretrained model represents well, so the foundation
-model tracks it with low, predictable error throughout the day. On the wetland
+kind of large-amplitude, high-SNR periodic signal the pretrained model
+represents well, so the foundation model tracks it with low, predictable error
+throughout the day. On the wetland
 site the hourly error is flatter and noisier, lacking the strong diurnal
-signature, consistent with a suppressed and irregular flux that is harder to
+signature, consistent with a suppressed, small-amplitude flux that is harder to
 anticipate from a generic temporal prior. The contrast in error structure thus
-echoes the alignment argument: the forest's regularity is what the model
-exploits, not merely the magnitude of its flux.
+echoes the alignment argument: the forest's large, clean diurnal amplitude is
+what the model tracks, the magnitude of its periodic flux being central to the
+alignment rather than incidental to it.
 
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.95\columnwidth]{figures/error_by_hour_UK-AMo.pdf}
   \\
   \includegraphics[width=0.95\columnwidth]{figures/error_by_hour_SE-Htm.pdf}
-  \Description{Two vertically stacked panels of forecast error against hour of day.
-  The wetland panel (top) shows a flatter, noisier error with no clear diurnal shape; 
-  the forest panel (bottom) shows a regular daily oscillation in error that follows the day-night cycle.}
-  \caption{Forecast error by hour of day for the wetland site (UK-AMo, top) and
-  the forest site (SE-Htm, bottom). The forest shows a regular diurnal error
+  \Description{Four box-plot panels of forecast RMSE against hour of day, in two
+  rows. Top row: the wetland site UK-AMo, with fine-tuned TEMPO (left) and Random
+  Forest (right). Bottom row: the forest site SE-Htm, with fine-tuned TEMPO (left)
+  and XGBoost (right). The forest error follows a daily oscillation that tracks the
+  day--night cycle, whereas the wetland error is flatter and noisier with no clear
+  diurnal shape.}
+  \caption{Forecast error by hour of day, showing fine-tuned TEMPO against each
+  site's strongest baseline (Random Forest for the wetland UK-AMo, top; XGBoost
+  for the forest SE-Htm, bottom). The forest shows a regular diurnal error
   pattern; the wetland error is flatter and less structured.}
   \label{fig:errorhour}
 \end{figure}
@@ -676,9 +763,21 @@ accuracy.
 The inverted penalty suggests that foundation models can behave
 counter-intuitively in the geosciences. Where classical theory anchors
 performance to source--target domain match, a pretrained model's skill appears
-to track alignment with its \emph{pretraining} distribution. A regular,
-periodic ecosystem signal can therefore be forecast more accurately than an
-irregular one even when the latter is nominally closer to the training biome.
+to track alignment with its \emph{pretraining} distribution. On the two
+held-out sites, the better-forecast forest is distinguished from the wetland
+not by a more \emph{regular} signal but by a far larger one: objective measures
+show it is, if anything, marginally less regular (higher spectral entropy, lower
+lag-24\,h autocorrelation; Table~\ref{tab:regularity}), yet its diurnal cycle is
+several times larger in amplitude. The better-supported reading is therefore one
+of amplitude and signal-to-noise---a large-amplitude, high-SNR periodic signal
+can be forecast more accurately than a suppressed, low-amplitude one even when
+the latter is nominally closer to the training biome. We flag honestly that the
+normalised regularity measures did \emph{not} support the original ``more
+regular'' hypothesis, and that this amplitude reading is inferred from limited
+evidence: per-site zero-shot $R^2$ exists for only the two test sites, and
+amplitude is not a strict ecosystem property (the wetland DE-Akm has the
+second-largest diurnal amplitude of the seven sites). We therefore present it as
+the more consistent interpretation rather than a settled mechanism.
 For practitioners assembling NEE forecasting systems across sparse tower
 networks, this implies that foundation models may generalise to
 under-represented but well-behaved ecosystems better than transfer theory

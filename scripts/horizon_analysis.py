@@ -75,14 +75,8 @@ MODELS = {
     "TEMPO Fine-Tuned" : (PRED_DIR,      "tempo_fine_tuned_preds"),
 }
 
-COLORS = {
-    "Random Forest"    : "#4CAF50",
-    "XGBoost"          : "#FF5722",
-    "LSTM"             : "#9C27B0",
-    "TEMPO Zero-Shot"  : "#03A9F4",
-    "TEMPO Fine-Tuned" : "#2196F3",
-    "Persistence"      : "#9E9E9E",
-}
+# Canonical per-model colours, shared across every paper figure.
+from figure_style import MODEL_COLORS as COLORS, apply_style  # noqa: E402
 LSTYLES = {
     "Random Forest"    : "-",
     "XGBoost"          : "--",
@@ -258,17 +252,8 @@ def tempo_advantage_pct(rmse_tempo: np.ndarray,
 # Plotting helpers
 # ---------------------------------------------------------------------------
 def setup_style():
-    plt.rcParams.update({
-        "font.family"     : "serif",
-        "font.size"       : 10,
-        "axes.labelsize"  : 11,
-        "axes.titlesize"  : 12,
-        "xtick.labelsize" : 9,
-        "ytick.labelsize" : 9,
-        "figure.dpi"      : 150,
-        "savefig.dpi"     : 300,
-        "savefig.bbox"    : "tight",
-    })
+    # Shared A4-legible style (>=12pt labels, >=10pt ticks, 300 dpi PNG).
+    apply_style()
 
 
 def _legend_handles(models):
@@ -282,7 +267,7 @@ def _annotate_thresholds(ax, y_levels: list, labels: list, xmax=96):
     for lv, lb in zip(y_levels, labels):
         ax.axhline(lv, color="black", lw=0.8, ls=":", alpha=0.55)
         ax.text(xmax * 0.98, lv + 0.01, lb,
-                ha="right", va="bottom", fontsize=7.5, alpha=0.7)
+                ha="right", va="bottom", fontsize=9, alpha=0.7)
 
 
 def _mark_key_horizons(ax, metric_arrays: dict, key_h: list, y_lim=None):
@@ -432,10 +417,10 @@ def plot_model_comparison(all_metrics: dict) -> plt.Figure:
     legend_models = [m for m in all_models if m != "Persistence"]
     handles = _legend_handles(legend_models)
     fig.legend(handles=handles, loc="lower center",
-                ncol=len(handles), fontsize=9,
+                ncol=len(handles), fontsize=10,
                 bbox_to_anchor=(0.5, -0.03))
     fig.suptitle("Model Comparison: RMSE and R² Across Forecast Horizons",
-                  fontsize=13, fontweight="bold")
+                  fontsize=14, fontweight="bold")
     return fig
 
 

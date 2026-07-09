@@ -636,10 +636,10 @@ def plot_transfer_matrix(df: pd.DataFrame) -> plt.Figure:
 
         im = ax.imshow(mat, cmap="RdYlGn", vmin=0.0, vmax=1.0, aspect="auto")
         ax.set_xticks([0, 1])
-        ax.set_xticklabels(TEST_SITES, fontsize=9)
+        ax.set_xticklabels(TEST_SITES, fontsize=11)
         ax.set_yticks(range(len(cfg_labels)))
-        ax.set_yticklabels(cfg_labels, fontsize=7.5)
-        ax.set_title(f"({'abc'[ai]}) {model}", fontsize=10, fontweight="bold")
+        ax.set_yticklabels(cfg_labels, fontsize=9)
+        ax.set_title(f"({'abc'[ai]}) {model}", fontsize=13, fontweight="bold")
 
         # Annotate cells
         for ri in range(mat.shape[0]):
@@ -648,7 +648,7 @@ def plot_transfer_matrix(df: pd.DataFrame) -> plt.Figure:
                 if not np.isnan(v):
                     colour = "white" if (v < 0.2 or v > 0.85) else "black"
                     ax.text(ci, ri, f"{v:.2f}",
-                            ha="center", va="center", fontsize=7.5,
+                            ha="center", va="center", fontsize=9,
                             color=colour, fontweight="bold")
 
         # Separator between Coverage and LOO groups
@@ -659,7 +659,7 @@ def plot_transfer_matrix(df: pd.DataFrame) -> plt.Figure:
     fig.suptitle(
         "Transfer Matrix — R² by Training Configuration × Test Ecosystem\n"
         "Upper: Coverage (A); Lower: Leave-One-Out (B)",
-        fontsize=12, fontweight="bold")
+        fontsize=14, fontweight="bold")
     plt.tight_layout()
     return fig
 

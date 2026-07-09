@@ -74,13 +74,8 @@ MODELS = {
     "LSTM": ("lstm", BASELINE_DIR),
 }
 
-COLORS = {
-    "TEMPO Fine-Tuned": "#2196F3",
-    "TEMPO Zero-Shot": "#03A9F4",
-    "XGBoost": "#FF5722",
-    "Random Forest": "#FF9800",
-    "LSTM": "#9C27B0",
-}
+# Canonical per-model colours, shared across every paper figure.
+from figure_style import MODEL_COLORS as COLORS, apply_style  # noqa: E402
 
 LOOKBACK = 336   # 14 days of hourly data
 HORIZON = 96     # 4-day forecast
@@ -94,17 +89,11 @@ FEATURE_NAMES = [
     'DOY', 'TOD',
 ]
 
-# Matplotlib style
+# Matplotlib style: shared A4-legible base + keep top/right spines hidden.
+apply_style()
 plt.rcParams.update({
-    'font.family': 'sans-serif',
-    'font.size': 10,
-    'axes.titlesize': 11,
-    'axes.labelsize': 10,
     'axes.spines.top': False,
     'axes.spines.right': False,
-    'figure.dpi': 150,
-    'savefig.dpi': 150,
-    'savefig.bbox': 'tight',
 })
 
 
@@ -308,17 +297,17 @@ def plot_error_by_hour(data: dict, site: str) -> None:
         ax.axvspan(-0.5, 5.5, alpha=0.06, color='navy', label='Night (0–6h)')
         ax.axvspan(20.5, 23.5, alpha=0.06, color='navy')
 
-        ax.set_title(model_name, fontsize=10, fontweight='bold')
-        ax.set_xlabel("Hour of Day (UTC)", fontsize=9)
+        ax.set_title(model_name, fontsize=13, fontweight='bold')
+        ax.set_xlabel("Hour of Day (UTC)", fontsize=12)
         ax.set_xticks([0, 6, 12, 18, 23])
         ax.set_xticklabels(['0h', '6h', '12h', '18h', '23h'])
         ax.grid(axis='y', alpha=0.3)
 
-    axes[0].set_ylabel("RMSE (µmol m⁻² s⁻¹)", fontsize=9)
+    axes[0].set_ylabel("RMSE (µmol m⁻² s⁻¹)", fontsize=12)
 
     # Night legend on last axis
     night_patch = mpatches.Patch(color='navy', alpha=0.12, label='Night hours')
-    axes[-1].legend(handles=[night_patch], fontsize=8, loc='upper right')
+    axes[-1].legend(handles=[night_patch], fontsize=10, loc='upper right')
 
     plt.tight_layout()
     _savefig(fig, FIG_DIR / f"error_by_hour_{site}.png")
