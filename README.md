@@ -2,11 +2,19 @@
 
 ## Deep Learning for Carbon Flux Forecasting: Foundation Models vs Traditional Approaches
 
-**BSc Computer Science Disseratation** | 2025–2026
+**BSc Computer Science Dissertation** | 2025–2026
 
 > Evaluating the TEMPO-80M time-series foundation model against LSTM, XGBoost, and Random Forest
 > baselines for net ecosystem exchange (NEE) prediction across European FLUXNET eddy-covariance sites,
 > with novel findings on transfer learning, ensemble methods, and active learning strategies.
+
+> **Scope.** This repository contains the full BSc dissertation work. A focused
+subset -- the cross-ecosystem transfer finding -- is under submission as a
+conference paper (AI4Science 2026), with covariate-adapter extensions planned
+for a subsequent journal paper. Some analyses here (ensemble, active-learning,
+ecosystem-conditioning) are part of the dissertation but out of scope for the
+conference paper, and a few dissertation-era figures differ slightly from the
+paper's verified values.
 
 ---
 
@@ -60,7 +68,7 @@ This dissertation addresses three open questions in the computational ecology li
 
 | Contribution | Description |
 | --- | --- |
-| **Inverted Transfer Penalty** | TEMPO achieves 21.6% *better* performance on a cross-ecosystem test site (forest) than on the same-ecosystem site (wetland), contradicting established transfer learning theory |
+| **Inverted Transfer Penalty** | TEMPO achieves 21.5% *better* R² performance on a cross-ecosystem test site (forest) than on the same-ecosystem site (wetland), contradicting established transfer learning theory |
 | **Negative Transfer Quantification** | Systematic quantification: 33/60 ensemble configurations (55%) exhibit negative transfer, with effect sizes up to −1.6% R² |
 | **Honest Ensemble Failure Analysis** | First rigorous documentation that model-diversity-insufficient ensembles actively degrade performance on challenging sites |
 | **Active Learning Protocol** | Data-driven recommendations for field campaign prioritisation based on ensemble uncertainty spatial analysis |
@@ -125,7 +133,7 @@ regimes, providing actionable guidance for measurement campaign design.
 ### Finding 1 — Inverted Transfer Penalty *(novel)*
 
 TEMPO-80M fine-tuned on five wetland training sites achieves **R² = 0.728** on the held-out
-SE-Htm *forest* site, which is **21.6% higher** than its performance on the same-ecosystem UK-AMo
+SE-Htm *forest* site, which is **21.5% higher in R²** than its performance on the same-ecosystem UK-AMo
 *wetland* test site (R² = 0.599). This directly inverts the conventional transfer learning
 prediction that cross-ecosystem transfer should underperform same-ecosystem transfer.
 
@@ -145,9 +153,9 @@ Across 60 model × site × configuration combinations evaluated in the transfer 
 
 ### Finding 3 — Site-Dependent Ensemble Outcomes
 
-Stacking ensembles provide +23% improvement on UK-AMo (Stacking-Ridge R² = 0.433 vs TEMPO
-Zero-Shot R² = 0.352), but no benefit on SE-Htm (−1.6% degradation vs TEMPO Zero-Shot
-R² = 0.741). Ensemble benefit only materialises when:
+Stacking ensembles provide an improvement on UK-AMo (Stacking-Ridge R² = 0.433 vs TEMPO
+Zero-Shot R² = 0.384), but no benefit on SE-Htm (a slight degradation vs TEMPO Zero-Shot
+R² = 0.752). Ensemble benefit only materialises when:
 
 1. Model errors are negatively correlated across the ensemble
 2. No single model has substantially higher accuracy than all others
@@ -175,9 +183,9 @@ Active learning analysis reveals that summer uncertainty exceeds winter uncertai
 | Role | Site Code | Ecosystem | Country | MAT (°C) | MAP (mm) |
 | --- | --- | --- | --- | --- | --- |
 | Training | FI-Lom | Wetland (fen) | Finland | 0.1 | 554 |
-| Training | GL-ZaF | Wetland (fen) | Greenland | −5.0 | 240 |
-| Training | IE-Cra | Wetland (fen) | Ireland | 9.9 | 854 |
-| Training | DE-Akm | Wetland (fen) | Germany | 9.3 | 593 |
+| Training | GL-ZaF | Wetland (tundra fen) | Greenland | −5.0 | 240 |
+| Training | IE-Cra | Wetland (raised bog) | Ireland | 9.9 | 854 |
+| Training | DE-Akm | Wetland (coastal peatland) | Germany | 9.3 | 593 |
 | Training | FR-LGt | Wetland (fen) | France | 11.2 | 900 |
 | **Test** | **UK-AMo** | **Wetland (blanket bog)** | **UK** | **5.7** | **1395** |
 | **Test** | **SE-Htm** | **Forest (hemiboreal)** | **Sweden** | **6.8** | **707** |
@@ -259,7 +267,7 @@ Random seed      : 42 (all experiments)
 ## Repository Structure
 
 ```text
-Carbon-flux-quatification/
+Carbon-flux-quantification/
 │
 ├── data/
 │   ├── raw/                      # Original FLUXNET2015 CSV files (not tracked by git)
@@ -287,6 +295,8 @@ Carbon-flux-quatification/
 │   ├── computational_efficiency.py     # Runtime and memory benchmarking
 │   ├── horizon_analysis.py       # Forecast degradation over horizon length
 │   ├── analyze_kgml_decomposition.py   # STL decomposition of NEE time series
+│   ├── signal_regularity_analysis.py   # Per-site signal regularity & amplitude measures (spectral entropy, 24h power, diurnal amplitude, autocorrelation) for the transfer mechanism analysis
+│   └── figure_style.py           # Shared Matplotlib style (colourblind-safe palette, consistent fonts) imported by the analysis/plotting scripts
 │
 ├── notebooks/
 │   ├── 01_data_exploration.ipynb       # EDA: flux distributions, seasonality
@@ -295,6 +305,7 @@ Carbon-flux-quatification/
 │
 ├── results/
 │   ├── active_learning/          # Priority conditions, learning curves, summaries
+│   ├── analysis/                 # Per-site regularity/amplitude table (signal_regularity.csv) and related analyses
 │   ├── ensemble/                 # Ensemble weights and accuracy tables
 │   ├── transfer_learning/        # Cross-site transfer matrices
 │   └── uncertainty/              # Uncertainty decomposition CSVs
@@ -321,8 +332,8 @@ Carbon-flux-quatification/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/PaulEzennolim/Carbon-flux-quatification.git
-cd Carbon-flux-quatification
+git clone https://github.com/PaulEzennolim/Carbon-flux-quantification.git
+cd Carbon-flux-quantification
 
 # 2. Create and activate conda environment
 conda create -n tempo python=3.10 -y
@@ -332,7 +343,7 @@ conda activate tempo
 pip install -r requirements.txt
 
 # 4. Verify core imports
-python -c "import torch, numpy, pandas, xgboost, momentfm; print('All OK')"
+python -c "import torch, numpy, pandas, xgboost; from tempo.models.TEMPO import TEMPO; print('All OK')"
 ```
 
 ### FLUXNET2015 Data Access
@@ -345,13 +356,19 @@ FLUXNET2015 data requires a free account at [fluxnet.org](https://fluxnet.org).
 
 ### TEMPO Model Weights
 
-TEMPO-80M weights are downloaded automatically by `momentfm` on first run:
+TEMPO-80M weights are downloaded automatically from the Hugging Face Hub
+(`Melady/TEMPO`, checkpoint `TEMPO-80M_v1.pth`) on first run, exactly as in
+`models/tempo_carbon_flux.py`:
 
 ```bash
-python -c "from momentfm import MOMENTPipeline; MOMENTPipeline.from_pretrained('AutonLab/MOMENT-1-large')"
+python -c "from tempo.models.TEMPO import TEMPO; TEMPO.load_pretrained_model(device='cpu', repo_id='Melady/TEMPO', filename='TEMPO-80M_v1.pth', cache_dir='checkpoints/TEMPO_checkpoints')"
 ```
 
-Cached in `models/checkpoints/` (excluded from git via `.gitignore`).
+<!-- TODO: document the exact install that provides the `tempo` package
+     (import path `tempo.models.TEMPO`). requirements.txt pins the TEMPO
+     dependencies but has no standalone `tempo` package line. -->
+
+Cached in `checkpoints/TEMPO_checkpoints/` (excluded from git via `.gitignore`).
 
 ---
 
@@ -401,6 +418,9 @@ python scripts/uncertainty_quantification.py
 
 # Transfer learning analysis
 python scripts/transfer_learning_analysis.py
+
+# Signal regularity & amplitude (transfer mechanism)
+python scripts/signal_regularity_analysis.py
 
 # Ensemble models
 python scripts/ensemble_models.py
@@ -476,7 +496,7 @@ python scripts/active_learning_analysis.py
 | TEMPO Fine-Tuned | **0.599** | 0.728 | +0.129 |
 | Stacking-Ridge Ensemble | 0.433 | 0.728 | +0.295 |
 
-> Ensemble improves over TEMPO Zero-Shot on UK-AMo (+23%) but degrades on SE-Htm (−1.6%).
+> Ensemble improves over TEMPO Zero-Shot on UK-AMo but slightly degrades on SE-Htm.
 
 ### Transfer Learning Transfer Penalty
 
@@ -544,7 +564,7 @@ Bonferroni correction applied to all pairwise model comparisons within each site
 Cohen's d reported for all statistically significant comparisons:
 
 ```text
-TEMPO vs XGBoost on SE-Htm: d = 1.87 (large effect)
+TEMPO vs XGBoost on SE-Htm: d = 0.553 (medium effect)
 ```
 
 ---
@@ -587,7 +607,7 @@ forecast accuracy is the primary objective and compute is not the bottleneck.
 
 ## Citation
 
-📄 **[Read the full dissertation (PDF)](https://github.com/PaulEzennolim/Carbon-flux-quatification/raw/main/Paul_Ezennolim_Dissertation.pdf)** &nbsp;<sub>*(Cmd/Ctrl + click to open in a new tab)*</sub>
+📄 **[Read the full dissertation (PDF)](https://github.com/PaulEzennolim/Carbon-flux-quantification/raw/main/Paul_Ezennolim_Dissertation.pdf)** &nbsp;<sub>*(Cmd/Ctrl + click to open in a new tab)*</sub>
 
 If you use this code or findings in your research, please cite:
 
@@ -599,7 +619,7 @@ If you use this code or findings in your research, please cite:
   year    = {2026},
   school  = {University of Sheffield},
   type    = {{BSc} Dissertation},
-  note    = {Code available at https://github.com/PaulEzennolim/Carbon-flux-quatification.git}
+  note    = {Code available at https://github.com/PaulEzennolim/Carbon-flux-quantification.git}
 }
 ```
 
@@ -621,7 +641,7 @@ If you use this code or findings in your research, please cite:
 - **Dissertation supervisor:** [Professor Po Yang](https://sheffield.ac.uk/cs/people/academic/po-yang) — for guidance on experimental design and statistical methodology
 - **FLUXNET community** — for maintaining the open FLUXNET2015 database and all site
   principal investigators who contributed data
-- **AutonLab (CMU)** — for open-sourcing the TEMPO-80M foundation model
+- **Cao et al. (Melady Lab, USC)** — for open-sourcing the TEMPO foundation model (TEMPO-80M)
 - **ICOS RI** — for supporting eddy-covariance infrastructure across European sites
 - **Computational resources** — analyses performed on personal hardware (Apple M4, 24 GB RAM);
   no HPC allocation required
@@ -643,9 +663,9 @@ If you use this code or findings in your research, please cite:
 
 ### Foundation Model
 
-- Goswami, M., Szafer, K., Choudhry, A., Cai, Y., Li, S., & Dubrawski, A. (2024).
-  **MOMENT: A Family of Open Time-series Foundation Models.**
-  *Proceedings of ICML 2024*. [arXiv:2402.03885](https://arxiv.org/abs/2402.03885)
+- Cao, D., Jia, F., Arik, S. O., Pfister, T., Zheng, Y., Ye, W., & Liu, Y. (2024).
+  **TEMPO: Prompt-based Generative Pre-trained Transformer for Time Series Forecasting.**
+  *Proceedings of ICLR 2024*. [arXiv:2310.04948](https://arxiv.org/abs/2310.04948)
 
 ### Baselines
 
@@ -691,4 +711,4 @@ If you use this code or findings in your research, please cite:
 
 ---
 
-Last updated: March 2026
+Last updated: July 2026
