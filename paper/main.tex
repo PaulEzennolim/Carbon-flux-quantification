@@ -52,7 +52,7 @@ TEMPO, a pretrained time-series foundation model, in both zero-shot and
 fine-tuned configurations with XGBoost, Random Forest and an LSTM for 96-hour
 NEE forecasting across contrasting FLUXNET2015 ecosystems: five wetland
 training sites and two held-out test sites, one wetland (UK-AMo, a blanket
-bog) and one forest (SE-Htm). The benchmark is our instrument, not our object:
+bog) and one forest (SE-Htm, a managed spruce forest). The benchmark is our instrument, not our object:
 the aim is to characterise the transfer behaviour it reveals. The conventional
 models exhibit the expected penalty, degrading by 37--54\% in $R^2$ when
 transferring from
@@ -500,8 +500,7 @@ a Welch periodogram and derive a normalised spectral entropy (lower${}={}$more
 regular) and the lag-24\,h autocorrelation (higher${}={}$more diurnally
 repeatable); as magnitude-preserving measures we record the absolute spectral
 power in the 24-h band and the peak-to-trough amplitude of the mean diurnal
-cycle. Full method and per-site values are in
-\texttt{results/analysis/signal\_regularity.csv} and summarised in
+cycle. These measures are summarised in
 Table~\ref{tab:regularity}.
 
 The normalised, shape-based measures do \emph{not} explain the inversion. On the
@@ -601,8 +600,7 @@ alignment rather than incidental to it.
 \label{sec:negtransfer}
 % Source: results/transfer_learning/transfer_matrix.csv,
 %         TRANSFER_LEARNING_SUMMARY.txt (negative-transfer cases)
-This subsection uses a separate, matched-subsample transfer protocol
-(\texttt{transfer\_matrix.csv}): each configuration trains on a fixed
+This subsection uses a separate, matched-subsample transfer protocol: each configuration trains on a fixed
 $5{,}000$-sample budget so that coverage and leave-one-site-out effects are
 compared on equal footing. Baseline $R^2$ under this protocol therefore differ
 slightly from the full-test benchmark of Section~\ref{sec:benchmark}; the
