@@ -31,6 +31,13 @@ Time-Series Foundation Model for Carbon Flux Forecasting}
   \country{United Kingdom}}
 \email{tezennolim1@sheffield.ac.uk}
 
+\author{Gaoshan Bi}
+\affiliation{%
+  \institution{School of Computer Science, University of Sheffield}
+  \city{Sheffield}
+  \country{United Kingdom}}
+\email{gaoshan.bi@sheffield.ac.uk}
+
 \author{Po Yang}
 \affiliation{%
   \institution{School of Computer Science, University of Sheffield}
@@ -39,7 +46,7 @@ Time-Series Foundation Model for Carbon Flux Forecasting}
 \email{po.yang@sheffield.ac.uk}
 %% -----------------------------------------------------------------------
 
-\renewcommand{\shortauthors}{Ezennolim and Yang}
+\renewcommand{\shortauthors}{Ezennolim et al.}
 
 \begin{abstract}
 Forecasting net ecosystem exchange (NEE) of carbon dioxide underpins
@@ -245,13 +252,14 @@ forest's pronounced seasonal--diurnal cycle that the transfer analysis exploits.
 % Source: figures/nee_timeseries_all_sites.pdf
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=0.85\textwidth]{figures/nee_timeseries_all_sites.pdf}
+  \includegraphics[width=\textwidth]{figures/nee_timeseries_all_sites.pdf}
   \Description{Seven stacked line plots, one per site, showing the half-hourly
   NEE trace over each site's measurement period. The wetland traces hover near
   zero with small fluctuations, while the forest trace swings widely between
   daytime carbon uptake and night-time release.}
   \caption{NEE time series for the five wetland training sites and the two
-  held-out test sites (UK-AMo wetland, SE-Htm forest).}
+  held-out test sites (UK-AMo wetland, SE-Htm forest). NEE is in
+  $\mu$mol\,CO$_2$\,m$^{-2}$\,s$^{-1}$.}
   \label{fig:neetimeseries}
 \end{figure*}
 
@@ -342,9 +350,9 @@ significant at $p<0.001$.
   \end{tabular}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure*}[t]
   \centering
-  \includegraphics[width=\columnwidth]{figures/all_models_comparison.pdf}
+  \includegraphics[width=\textwidth]{figures/all_models_comparison.pdf}
   \Description{Grouped bar charts of RMSE, MAE and R-squared for each model at
   each site. On the wetland site the baseline bars sit close to the TEMPO bars,
   but on the forest site the baseline R-squared bars are much shorter than the
@@ -354,7 +362,7 @@ significant at $p<0.001$.
   are competitive on the wetland site but collapse on the forest site, where
   both TEMPO variants remain strong.}
   \label{fig:allmodels}
-\end{figure}
+\end{figure*}
 
 \subsection{The inverted transfer penalty}
 \label{sec:inversion}
@@ -494,7 +502,7 @@ signal it does not.
 \subsection{Quantifying the mechanism: regularity and amplitude}
 \label{sec:quantmech}
 To test the alignment argument against objective evidence, we compute
-signal measures for each site directly from its hourly NEE series---the same
+signal measures for each site directly from its hourly NEE series, the same
 target the models forecast. From each series we estimate the power spectrum with
 a Welch periodogram and derive a normalised spectral entropy (lower${}={}$more
 regular) and the lag-24\,h autocorrelation (higher${}={}$more diurnally
@@ -511,9 +519,9 @@ forecast far better (zero-shot $R^2=0.752$ vs.\ $0.384$). A ``more regular
 signal, better forecast'' account is therefore not supported by these data.
 
 The amplitude measures, by contrast, order the two sites as $R^2$ does. The
-forest's diurnal signal is several times larger than the wetland's---absolute
+forest's diurnal signal is several times larger than the wetland's, absolute
 24-h spectral power $25.9$ vs.\ $6.7$, and peak-to-trough diurnal amplitude
-$14.0$ vs.\ $6.5$ (Table~\ref{tab:regularity})---consistent with an amplitude /
+$14.0$ vs.\ $6.5$ (Table~\ref{tab:regularity}), consistent with an amplitude /
 signal-to-noise reading of the mechanism rather than a regularity one.
 
 Three caveats bound this. First, per-site zero-shot $R^2$ is available for only
@@ -752,7 +760,7 @@ not by a more \emph{regular} signal but by a far larger one: objective measures
 show it is, if anything, marginally less regular (higher spectral entropy, lower
 lag-24\,h autocorrelation; Table~\ref{tab:regularity}), yet its diurnal cycle is
 several times larger in amplitude. The better-supported reading is therefore one
-of amplitude and signal-to-noise---a large-amplitude, high-SNR periodic signal
+of amplitude and signal-to-noise, a large-amplitude, high-SNR periodic signal
 can be forecast more accurately than a suppressed, low-amplitude one even when
 the latter is nominally closer to the training biome. We flag honestly that the
 normalised regularity measures did \emph{not} support the original ``more
