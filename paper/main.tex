@@ -14,8 +14,8 @@
 %% block below before submission. Add author details back only on acceptance.
 
 % \documentclass[manuscript]{acmart}  % single-column review format -- use if CFP requires single-column
-% \documentclass[sigconf]{acmart}          % NAMED -- use for camera-ready
-\documentclass[sigconf,anonymous]{acmart}   % BLIND -- use for submission
+\documentclass[sigconf]{acmart}          % NAMED -- use for camera-ready
+% \documentclass[sigconf,anonymous]{acmart}   % BLIND -- use for submission
 \input{preamble}
 
 \begin{document}
@@ -47,7 +47,7 @@ Time-Series Foundation Model for Carbon Flux Forecasting}
 \email{po.yang@sheffield.ac.uk}
 %% -----------------------------------------------------------------------
 
-% \renewcommand{\shortauthors}{Ezennolim et al.}   % NAMED running header -- restore for camera-ready
+\renewcommand{\shortauthors}{Ezennolim et al.}
 
 \begin{abstract}
 Forecasting net ecosystem exchange (NEE) of carbon dioxide underpins
@@ -807,17 +807,14 @@ via covariate conditioning and evaluate this inversion across a broader suite
 of global biomes.
 
 % =====================================================================
-%% RESTORE for camera-ready: the acknowledgments name the supervisor (Po Yang)
-%% and would de-anonymise the submission, so they are commented out for the
-%% double-blind version. Uncomment this whole block for the named camera-ready.
-% \begin{acks}
-% We thank Po Yang for supervision; the FLUXNET community and individual site
-% principal investigators for maintaining the open FLUXNET2015 database; the
-% ICOS network; and the developers of TEMPO for releasing the model weights.
-% %% AI-use disclosure: add a proportional disclosure here if any text, figures
-% %% or code newly created for this paper were AI-generated, per ACM policy.
-% %% Editing or polishing the authors' own writing requires no disclosure.
-% \end{acks}
+\begin{acks}
+We thank Po Yang for supervision; the FLUXNET community and individual site
+principal investigators for maintaining the open FLUXNET2015 database; the
+ICOS network; and the developers of TEMPO for releasing the model weights.
+%% AI-use disclosure: add a proportional disclosure here if any text, figures
+%% or code newly created for this paper were AI-generated, per ACM policy.
+%% Editing or polishing the authors' own writing requires no disclosure.
+\end{acks}
 
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}
