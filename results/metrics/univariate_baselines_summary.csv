@@ -1,0 +1,7 @@
+Model,Site,RMSE,MAE,R2,Inputs
+Random Forest,UK-AMo,2.3304,1.5587,0.5947,NEE history only (336x1)
+Random Forest,SE-Htm,4.3755,3.0406,0.6387,NEE history only (336x1)
+XGBoost,UK-AMo,2.3024,1.5260,0.6044,NEE history only (336x1)
+XGBoost,SE-Htm,4.5857,3.1800,0.6032,NEE history only (336x1)
+LSTM,UK-AMo,2.5885,1.6010,0.4999,NEE history only (336x1)
+LSTM,SE-Htm,4.2771,2.9611,0.6544,NEE history only (336x1)

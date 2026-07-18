@@ -296,6 +296,7 @@ Carbon-flux-quantification/
 │   ├── horizon_analysis.py       # Forecast degradation over horizon length
 │   ├── analyze_kgml_decomposition.py   # STL decomposition of NEE time series
 │   ├── signal_regularity_analysis.py   # Per-site signal regularity & amplitude measures (spectral entropy, 24h power, diurnal amplitude, autocorrelation) for the transfer mechanism analysis
+│   ├── univariate_baselines.py   # Baselines retrained on NEE history only (input-matched control vs TEMPO)
 │   └── figure_style.py           # Shared Matplotlib style (colourblind-safe palette, consistent fonts) imported by the analysis/plotting scripts
 │
 ├── notebooks/
@@ -307,6 +308,7 @@ Carbon-flux-quantification/
 │   ├── active_learning/          # Priority conditions, learning curves, summaries
 │   ├── analysis/                 # Per-site regularity/amplitude table (signal_regularity.csv) and related analyses
 │   ├── ensemble/                 # Ensemble weights and accuracy tables
+│   ├── metrics/                  # Model summary tables, incl. univariate_baselines_summary.csv (NEE-history-only control)
 │   ├── transfer_learning/        # Cross-site transfer matrices
 │   └── uncertainty/              # Uncertainty decomposition CSVs
 │
@@ -421,6 +423,9 @@ python scripts/transfer_learning_analysis.py
 
 # Signal regularity & amplitude (transfer mechanism)
 python scripts/signal_regularity_analysis.py
+
+# Input-matched control: baselines using NEE history only
+python scripts/univariate_baselines.py
 
 # Ensemble models
 python scripts/ensemble_models.py
